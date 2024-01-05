@@ -1,8 +1,8 @@
 const Login = () => {
   return (
     <>
-      <div className="h-screen bg-[#cbd7ce]">
-        <div className="absolute inset-x-52 inset-y-50 card card-side bg-white shadow-md w-3/4 h-3/4 mt-16">
+      <div className="flex flex-col items-center justify-start h-screen mt-28">
+        <div className=" card card-side bg-white shadow-md w-3/4 h-3/4">
           <figure>
             <img src="/img.png" alt="workout" />
           </figure>

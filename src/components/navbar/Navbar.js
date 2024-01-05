@@ -3,11 +3,9 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <>
-      <div className="navbar bg-[#eef2ef] ">
+      <div className="navbar bg-[#eef2ef] fixed w-full z-10 top-0">
         <div className="navbar-start">
           <div className="dropdown">
-            
-            
           </div>
           <a className="btn btn-ghost text-2xl text-black ml-6 p-0">
             HealthStory
@@ -22,7 +20,7 @@ const Navbar = () => {
               <Link href='/about' className="text-black">ABOUT</Link>
             </li>
             <li>
-              <Link href='/blogs' className="text-black">DIET DIARY</Link>
+              <Link href='/blogs' className="text-black">blogs</Link>
             </li>
           </ul>
         </div>
