@@ -19,9 +19,7 @@ const Navbar = () => {
             <li>
               <Link href='/about' className="text-black">ABOUT</Link>
             </li>
-            <li>
-              <Link href='/blogs' className="text-black">blogs</Link>
-            </li>
+            
           </ul>
         </div>
         <div className="navbar-end ">

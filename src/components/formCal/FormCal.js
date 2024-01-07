@@ -1,4 +1,4 @@
-const Fighting = () => {
+const FromCal= () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="card w-2/4 h-4/6 bg-[#eef2ef] shadow-xl flex flex-col items-center justify-between">
@@ -113,4 +113,4 @@ const Fighting = () => {
   );
 };
 
-export default Fighting;
+export default FromCal;

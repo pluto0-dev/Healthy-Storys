@@ -4,7 +4,7 @@ const Register = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-start h-screen mt-28 bg-[#cbd7ce]">
-        <div className="card card-side bg-white shadow-md w-3/4 h-3/4 ">
+        <div className="card card-side bg-white rounded-[60px] w-3/4 ">
           <figure>
             <img src="/img.png" alt="workout" />
           </figure>

@@ -2,7 +2,7 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-start h-screen mt-28">
-        <div className=" card card-side bg-white shadow-md w-3/4 h-3/4">
+        <div className=" card card-side bg-white shadow-md w-3/4 rounded-[60px] ">
           <figure>
             <img src="/img.png" alt="workout" />
           </figure>
