@@ -1,5 +1,5 @@
 'use client'
-import { Directus } from '@directus/sdk';
+import { Directus } from "@directus/sdk";
 
 const About = async () => {
   const directus = new Directus('http://localhost:8055')

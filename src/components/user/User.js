@@ -1,41 +1,54 @@
-'use client'
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import axios from '@/app/api/api'
+"use client"
 
+// Import necessary modules and components
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Directus } from "@directus/sdk";
 
 const User = () => {
-  const [user, setUser] = useState([]);
+  const directus = new Directus('http://localhost:8055');
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await axios.get('/items/user');
-        setData(response.data);
+        // Fetch user data including image URLs from Directus
+        const response = await directus.items('user').readByQuery({ sort: ['id'] });
+        setUsers(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching users:', error);
       }
     };
 
-    fetchData();
+    fetchUsers();
   }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-    {user.map((user, index) => (
-      <Link key={index} href={`/blogs/${user.id}`}>
-        <a className="card w-[350px] h-[400px] bg-base-100 shadow-xl ">
-          <div
-            className="card-body "
-            style={{ backgroundImage: `url('${user.avatar}')`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '200px', borderRadius: '16px'}}
-          >
-            <h2 className="card-title font-bold text-xl text-black">{user.username}</h2>
+      {users.map((currentUser) => (
+        <Link key={currentUser.id} href={`/blogs/${currentUser.id}`}>
+          <div className="card w-[350px] h-[400px] bg-base-100 shadow-xl relative">
+            <div
+              className="card-body"
+              style={{
+                backgroundImage: `url('${currentUser.image_profile}')`, // Use the image URL from Directus
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                minHeight: "200px",
+                borderRadius: "16px",
+              }}
+            >
+              <div className="absolute inset-x-20 bottom-0 h-12 px-auto mx-auto backdrop-blur-3xl bg-black/50 rounded-t-lg">
+                <h2 className="card-title font-bold text-2xl text-white justify-center mt-2 pb-2">
+                  {currentUser.username}
+                </h2>
+              </div>
+            </div>
           </div>
-        </a>
-      </Link>
-    ))}
-  </div>
-  )
-}
+        </Link>
+      ))}
+    </div>
+  );
+};
 
-export default User
+export default User;
