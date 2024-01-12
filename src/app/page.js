@@ -1,7 +1,9 @@
+
 import User from "@/components/user/User";
+
 const Home = () => {
-  
-  
+
+
   return (
     <>
       <div className="flex flex-col items-center justify-start h-screen mt-28">

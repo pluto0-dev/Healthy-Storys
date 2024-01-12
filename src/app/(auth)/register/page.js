@@ -19,29 +19,33 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
-const router = useRouter();
+
+  const router = useRouter();
+
+  const isSpecialCharacter = (str) => /[!#$%^&*(),?":{}|<>]/.test(str);
+
   const handleChange = (e) => {
-    setFormData((prevData) => ({ ...prevData, [e.target.name]: e.target.value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [e.target.name]: '' }));
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if any field is empty
     const newErrors = {};
     Object.entries(formData).forEach(([key, value]) => {
-      if (!value) {
+      if (!value.trim()) {
         newErrors[key] = `Please enter your ${key === 'confirmPassword' ? 'confirm password' : key}.`;
+      } else if (isSpecialCharacter(value)) {
+        newErrors[key] = `Special characters are not allowed in ${key}.`;
       }
     });
 
-    // If there are errors, update the state and stop submission
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-
     try {
       // Send data to Directus
       const response = await directus.items('user').createOne({

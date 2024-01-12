@@ -1,51 +1,57 @@
-'use client'
-import { useState } from 'react';
-import { Directus } from '@directus/sdk';
+"use client";
+import { useState } from "react";
+import { Directus } from "@directus/sdk";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
+const directusApiUrl = process.env.NEXT_PUBLIC_DIRECTUS_API_URL || "http://localhost:8055/";
+const directus = new Directus(directusApiUrl);
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
-    setFormData((prevData) => ({ ...prevData, [e.target.name]: e.target.value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Create a Directus instance
-    const directus = new Directus('http://localhost:8055/');
+    setIsLoading(true);
 
     try {
-      // Authenticate user using Directus login endpoint
-      const response = await directus.auth
-        .login({
-          ...formData,
-        })
-        .toPromise();
-
-      console.log('Login successful:', response);
-
-      // You can redirect the user to another page or perform other actions upon successful login
-
-      // Reset the form data and clear any previous error
-      setFormData({
-        email: '',
-        password: '',
+      const users = await directus.items("user").readByQuery({
+        filter: {
+          email: formData.email,
+          password: formData.password,
+        },
       });
-      setError(null);
+
+      if (users.data.length === 1) {
+        console.log("User logged in successfully:");
+        // Set a cookie to identify the authenticated user
+        Cookies.set("authToken", "PVYPotaWRgGrzMqbNxz/LJEOvB5PwQ5jd8j+oFHbrPk=", { expires: 1 }); // Adjust expiration as needed
+        alert("Login successful!");
+        router.push("/");
+        
+      } else {
+        console.error("Invalid email or password. Please try again.");
+        setError("Invalid email or password. Please try again.");
+      }
     } catch (error) {
-      console.error('Login failed:', error);
-    
-      // Log the specific error from the Directus API
-      console.error('Directus API Error:', error.response);
-    
-      // Handle login failure, show a more detailed error message
-      setError('Invalid email or password. Please try again.');
+      console.error("Error logging in user:", error);
+      setError("An error occurred while logging in. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,7 +66,6 @@ const Login = () => {
             <h1 className="mt-1 text-black font-bold text-5xl">Hello!</h1>
             <h2 className="text-black text-lg mt-10">Welcome Back</h2>
 
-            {/* Input for email */}
             <div className="input-box my-2">
               <input
                 type="text"
@@ -73,7 +78,6 @@ const Login = () => {
               />
             </div>
 
-            {/* Input for password */}
             <div className="input-box my-2">
               <input
                 type="password"
@@ -86,13 +90,11 @@ const Login = () => {
               />
             </div>
 
-            {/* Error message */}
             {error && <p className="text-red-500">{error}</p>}
 
-            {/* Submit button */}
             <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
-              <button type="submit" className="w-11/12">
-                Sign in
+              <button type="submit" className="w-11/12" disabled={isLoading}>
+                {isLoading ? "Signing in..." : "Sign in"}
               </button>
             </div>
           </div>

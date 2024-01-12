@@ -1,25 +1,23 @@
 const Profile = () => {
-    
   return (
-    <>
-      <div className="flex flex-col items-center justify-start h-screen">
-        <div className="text-center text-white text-5xl font-normal font-['Lalezar'] mb-8 mt-28">
-          Profile
-        </div>
-        <div className="flex  items-center justify-center ml-6 mb-6">
-          <div className="avatar mr-4 ">
-            <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img
-                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                alt="avatar"
-              />
-            </div>
+    <div className="flex flex-col items-center justify-start h-screen">
+      <div className="text-center text-white text-5xl font-normal font-['Lalezar'] mb-8 mt-28">
+        Profile
+      </div>
+      <div className="flex items-center justify-center ml-6 mb-6">
+        <div className="avatar mr-4">
+          <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <img
+              src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+              alt="avatar"
+            />
           </div>
-          <button className="bg-[#587F61] text-white px-4 py-2 rounded-md shadow-md">
-            Edit
-          </button>
         </div>
-      
+        <button className="bg-[#587F61] text-white px-4 py-2 rounded-md shadow-md">
+          Edit
+        </button>
+      </div>
+
       <div className="card w-2/4 h-3/6 bg-[#eef2ef] shadow-xl">
         <form className="card-body text-[#587F61]">
           <div className="form-control">
@@ -85,13 +83,13 @@ const Profile = () => {
               <div
                 tabIndex={0}
                 role="button"
-                className="btn m-1 bg-[#cbd7ce] w-2/4 max-w-ws ml-[37px]"
+                className="btn m-1 bg-[#cbd7ce] w-2/4 max-w-ws ml-[37px] border-none text-[#587F61]"
               >
                 Select Activity
               </div>
               <ul
                 tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-[#cbd7ce] flex items-start justify-start"
+                className="dropdown-content z-[1] menu p-2 shadow bg-[#cbd7ce] flex items-start justify-start "
               >
                 <li>
                   <a>Sedentary : little or no exercise</a>
@@ -125,9 +123,8 @@ const Profile = () => {
             </div>
           </div>
         </form>
-      </div>
-      </div>
-    </>
+        </div>
+    </div>
   );
 };
 
