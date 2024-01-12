@@ -1,22 +1,21 @@
 "use client"
 
-// Import necessary modules and components
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Directus } from "@directus/sdk";
 
 const User = () => {
-  const directus = new Directus('http://localhost:8055');
+  const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         // Fetch user data including image URLs from Directus
-        const response = await directus.items('user').readByQuery({ sort: ['id'] });
+        const response = await directus.items("user").readByQuery({ sort: ["id"] });
         setUsers(response.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
