@@ -60,6 +60,12 @@ const Navbar = () => {
       <div className="navbar-end">
         {isLoggedIn ? (
           <>
+          <Link
+                href="/blogs/create"
+                className="btn btn-ghost btn-circle text-white text-l font-bold bg-[#587F61] drop-shadow-lg w-48 mr-6 rounded-[10px] justify-center items-center gap-2.5 hover:bg-[#496950]"
+              >
+                + Create your news blog
+              </Link>
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn bg-[#eef2ef] hover:bg-[#eef2ef] border-none shadow-none w-12 mr-14 mx-auto">
                 <div className="avatar">

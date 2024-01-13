@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Directus } from "@directus/sdk";
+import Image from 'next/image';
 
 const BlogList = () => {
   const directus = new Directus("http://localhost:8055");

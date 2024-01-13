@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Directus } from "@directus/sdk";
-
+const assetsUrl = process.env.NEXT_PUBLIC_ASSET_URL
 const User = () => {
   const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
@@ -12,7 +12,9 @@ const User = () => {
     const fetchUsers = async () => {
       try {
         // Fetch user data including image URLs from Directus
-        const response = await directus.items("user").readByQuery({ sort: ["id"] });
+        const response = await directus
+          .items("user")
+          .readByQuery({ sort: ["id"] });
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -21,7 +23,7 @@ const User = () => {
 
     fetchUsers();
   }, []);
-
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
       {users.map((currentUser) => (
@@ -30,7 +32,7 @@ const User = () => {
             <div
               className="card-body"
               style={{
-                backgroundImage: `url('${currentUser.image_profile}')`, // Use the image URL from Directus
+                backgroundImage:`url('${assetsUrl}/${currentUser.image_profile}')`, // Use a fallback image URL or provide a default image
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 minHeight: "200px",
