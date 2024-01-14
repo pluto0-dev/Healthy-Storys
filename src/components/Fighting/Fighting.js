@@ -11,7 +11,7 @@ const Fighting = () => {
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box">
           <div className="font-bold text-3xl">กำลังใจจจ!</div>
-          <p className="py-4 text-xl">สู้ๆ อย่าพึ่งหยุดกินชาบู</p>
+          <p className="py-4 text-xl">สู้ๆ อย่ายอมแพ้</p>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>

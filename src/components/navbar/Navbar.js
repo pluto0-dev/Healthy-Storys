@@ -15,7 +15,7 @@ const Navbar = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const authToken = Cookies.get("authToken");
+        const authToken = Cookies.get("token");
 
         if (authToken) {
           // You can make an API call to verify the token on the server
@@ -34,7 +34,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     // Clear the authentication cookie and update the state
-    Cookies.remove("authToken");
+    Cookies.remove("token");
     setIsLoggedIn(false);
     // Redirect to the login page
     router.push("/login");

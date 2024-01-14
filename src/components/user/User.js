@@ -3,19 +3,39 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Directus } from "@directus/sdk";
-const assetsUrl = process.env.NEXT_PUBLIC_ASSET_URL
+
 const User = () => {
   const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
+  const assetsUrl = process.env.NEXTAUTH_URL;
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Fetch user data including image URLs from Directus
         const response = await directus
           .items("user")
           .readByQuery({ sort: ["id"] });
-        setUsers(response.data);
+
+        const filteredUsers = await Promise.all(
+          response.data.map(async (user) => {
+            const blogsResponse = await directus
+              .items("blog")
+              .readByQuery({
+                filter: { user: user.id },
+                limit: 1,
+              });
+
+            if (blogsResponse.data.length > 0) {
+              return user;
+            }
+
+            return null;
+          })
+        );
+
+        const filteredUsersWithoutNull = filteredUsers.filter((user) => user !== null);
+
+        setUsers(filteredUsersWithoutNull);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -23,7 +43,7 @@ const User = () => {
 
     fetchUsers();
   }, []);
-  
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
       {users.map((currentUser) => (
@@ -32,7 +52,7 @@ const User = () => {
             <div
               className="card-body"
               style={{
-                backgroundImage:`url('${assetsUrl}/${currentUser.image_profile}')`, // Use a fallback image URL or provide a default image
+                backgroundImage:`url('${assetsUrl}/${currentUser.image_profile}')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 minHeight: "200px",

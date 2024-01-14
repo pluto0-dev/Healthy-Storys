@@ -17,13 +17,13 @@ const About = async () => {
       </div>
 
       <div className="w-3/4 flex flex-col justify-center mx-auto">
-        <h1 className="text-3xl md:text-5xl text-center text-white font-bold scroll-mx-1">
+        <h1 className="text-3xl md:text-5xl text-center text-black font-bold scroll-mx-1">
           About
         </h1>
         {publicData.data.map((item, index) => {
         if (item.info) {
           return (
-            <p key={index} className="text-white text-center text-lg md:text-3xl my-5 mr-10">
+            <p key={index} className="text-black text-center text-lg md:text-3xl my-5 mr-14">
               {item.info}
             </p>
           );

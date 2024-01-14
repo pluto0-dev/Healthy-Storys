@@ -32,8 +32,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const newErrors = {};
+  
+    // Check email format
+    if (!formData.email.endsWith('@gmail.com') && !formData.email.endsWith('@hotmail.com')) {
+      newErrors.email = 'Please enter a valid email address ending with @gmail.com or @hotmail.com.';
+    }
+  
+    // Check if password and confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Password and confirm password do not match.';
+    }
+  
+    // Check for empty fields and special characters
     Object.entries(formData).forEach(([key, value]) => {
       if (!value.trim()) {
         newErrors[key] = `Please enter your ${key === 'confirmPassword' ? 'confirm password' : key}.`;
@@ -41,11 +53,12 @@ const Register = () => {
         newErrors[key] = `Special characters are not allowed in ${key}.`;
       }
     });
-
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+  
     try {
       // Send data to Directus
       const response = await directus.items('user').createOne({
@@ -53,9 +66,9 @@ const Register = () => {
         username: formData.username,
         password: formData.password,
       });
-
+  
       console.log('User registered successfully:', response);
-
+  
       alert('Registration successful!');
       router.push('/login');
       // Redirect to Home page

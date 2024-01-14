@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
-const directusApiUrl = process.env.NEXT_PUBLIC_DIRECTUS_API_URL || "http://localhost:8055/";
-const directus = new Directus(directusApiUrl);
+
+const directus = new Directus("http://localhost:8055/");
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,12 +37,12 @@ const Login = () => {
       });
 
       if (users.data.length === 1) {
-        console.log("User logged in successfully:");
-        // Set a cookie to identify the authenticated user
-        Cookies.set("authToken", "PVYPotaWRgGrzMqbNxz/LJEOvB5PwQ5jd8j+oFHbrPk=", { expires: 1 }); // Adjust expiration as needed
+        const user = users.data[0];
+        Cookies.set("token", user.id, { expires: 1 }); // Adjust expiration as needed
+
+        console.log("User logged in successfully:", user);
         alert("Login successful!");
         router.push("/");
-        
       } else {
         console.error("Invalid email or password. Please try again.");
         setError("Invalid email or password. Please try again.");
@@ -61,7 +61,10 @@ const Login = () => {
         <figure>
           <img src="/img.png" alt="workout" />
         </figure>
-        <form className="flex justify-center card-body mx-24" onSubmit={handleSubmit}>
+        <form
+          className="flex justify-center card-body mx-24"
+          onSubmit={handleSubmit}
+        >
           <div className="form-control">
             <h1 className="mt-1 text-black font-bold text-5xl">Hello!</h1>
             <h2 className="text-black text-lg mt-10">Welcome Back</h2>

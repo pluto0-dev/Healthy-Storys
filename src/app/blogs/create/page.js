@@ -1,4 +1,4 @@
-import CreateBlog from "@/components/Blogs/CreateBlog"
+import CreateBlog from "@/components/Blogs/CreateContent"
 const BlogCreate = () => {
     return (
         <>
