@@ -1,8 +1,8 @@
-import CreateBlog from "@/components/Blogs/CreateContent"
+import CreateBlog from "@/components/Blogs/CreateBlog"
 const BlogCreate = () => {
     return (
         <>
-            <CreateBlog />
+           <CreateBlog />
         </>
     )
 }

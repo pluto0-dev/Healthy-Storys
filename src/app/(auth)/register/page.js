@@ -36,8 +36,8 @@ const Register = () => {
     const newErrors = {};
   
     // Check email format
-    if (!formData.email.endsWith('@gmail.com') && !formData.email.endsWith('@hotmail.com')) {
-      newErrors.email = 'Please enter a valid email address ending with @gmail.com or @hotmail.com.';
+    if (!formData.email.endsWith('@gmail.com') && !formData.email.endsWith('@hotmail.com') && !formData.email.endsWith('@northbkk.ac.th')) {
+      newErrors.email = 'Please enter a valid email address';
     }
   
     // Check if password and confirm password match

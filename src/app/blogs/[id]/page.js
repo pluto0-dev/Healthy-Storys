@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import BlogList from "@/components/Blogs/BlogList";
+import BlogList from "@/components/Contents/BlogList";
 const Blogs = ({ params }) => {
   const [user, setUser] = useState([]);
   const { id } = params;

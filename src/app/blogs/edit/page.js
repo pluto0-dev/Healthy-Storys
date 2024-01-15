@@ -1,4 +1,4 @@
-import EditBlog from "@/components/Blogs/EditBlog"
+import EditBlog from "@/components/Contents/EditBlog"
 const BlogEdit = () => {
     return (
        <EditBlog /> 
