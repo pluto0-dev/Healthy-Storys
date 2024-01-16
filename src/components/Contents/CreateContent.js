@@ -1,46 +1,61 @@
-'use client'
-import { useState } from 'react';
-import { Directus } from '@directus/sdk';
+"use client";
+import { useState } from "react";
+import { Directus } from "@directus/sdk";
+import Cookies from "js-cookie";
 
-// Create a Directus instance
-const directus = new Directus('http://localhost:8055/'); // Update the URL to your Directus API endpoint
+const authToken = Cookies.get("token");
+const directus = new Directus("http://localhost:8055/");
 
-const CreateContent = () => {
-  // State to manage form data
+const CreateContent = ({ params }) => {
   const [formData, setFormData] = useState({
-    videoClipName: '',
-    details: '',
+    videoClipName: "",
+    details: "",
   });
-
-
-  // Function to handle form submission
+ 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await directus.items('content').createOne({
-        video: formData.dropzone,
+      // Fetch the user's blog
+      const userBlog = await directus.items("blog").readByQuery({
+        filter: { user: authToken },
+        limit: 1,
+      });
+
+      const response = await directus.items("content").createOne({
+        blog: userBlog.data[0].id,
         title: formData.videoClipName,
         description: formData.details,
       });
 
-      console.log('Content created successfully:', response);
+      console.log("Content created successfully:", response);
 
       // Reset the form data
       setFormData({
-        videoClipName: '',
-        details: '',
+        videoClipName: "",
+        details: "",
       });
     } catch (error) {
-      console.error('Error creating content:', error);
+      console.error("Error creating content:", error);
     }
   };
 
-  // Function to handle input changes
+
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const { name, value, files } = e.target;
+  
+    // If the input is a file input, store the file in formData
+    if (name === "dropzone" && files.length > 0) {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files[0], // Assuming you only want to handle one file
+      }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
   };
+
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -80,7 +95,7 @@ const CreateContent = () => {
               </p>
             </div>
             <input
-            id='dropzone-file'
+              id="dropzone-file"
               name="dropzone"
               type="file"
               className="hidden"

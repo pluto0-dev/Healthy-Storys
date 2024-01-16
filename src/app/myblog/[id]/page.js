@@ -1,4 +1,4 @@
-'use client'
+"use client";
 // import EditBlog from "@/components/Blogs/EditBlog";
 // import Link from "next/link";
 // import Cookies from "js-cookie";
@@ -85,13 +85,14 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Link from "next/link";
-import { MoreHorizontal} from 'react-feather';
+import { MoreHorizontal } from "react-feather";
+import Cookies from "js-cookie";
 const myBlogs = ({ params }) => {
   const directus = new Directus("http://localhost:8055");
   const [user, setUser] = useState({});
   const [blogs, setBlogs] = useState([]);
   const [content, setContent] = useState([]);
-
+const authToken = Cookies.get("token")
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -128,7 +129,7 @@ const myBlogs = ({ params }) => {
     const fetchContent = async () => {
       try {
         // Fetch content for the specific user's blogs
-        const blogIds = blogs.map(blog => blog.id);
+        const blogIds = blogs.map((blog) => blog.id);
         const contentResponse = await directus.items("content").readByQuery({
           filter: { blog: { id: { _in: blogIds } } },
         });
@@ -141,7 +142,14 @@ const myBlogs = ({ params }) => {
     fetchContent();
   }, [blogs]);
 
-  
+  const handleDelete = async (contentId) => {
+    try {
+      await directus.items("content").deleteOne(contentId);
+      setContent((prevContent) => prevContent.filter((item) => item.id !== contentId));
+    } catch (error) {
+      console.log("Error deleting content:", error);
+    }
+  };
 
   return (
     <>
@@ -161,51 +169,63 @@ const myBlogs = ({ params }) => {
           <div className="mt-5 text-black">{blogs[0]?.description}</div>
         </div>
       </div>
+      <div className="flex  mt-5 item-center justify-end mr-[410px]">
+        <Link
+          href={`/content/editcontent/${authToken}`}
+          className="w-1/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
+        >
+          <input type="submit" value="แก้ไขบล็อก" className="ml-4" />
+        </Link>
+        <Link
+          href={`/content/createcontent/${authToken}`}
+          className="w-2/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
+        >
+          <input type="submit" value="+ สร้างคอนเทนต์ของคุณ" className="ml-5" />
+        </Link>
+      </div>
       <div className="flex items-end justify-end">
         <div className="grid grid-cols-1 gap-4 mt-8 mx-auto">
           {content.map((content) => (
             <div key={content.id} className="relative">
-            <Link
-              href={`content/viewcontent/${content.id}`}
-              className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
-            >
-              <figure>
-                <img
-                  src={
-                    "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
-                  }
-                  alt="imgvideo"
-                />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title font-bold text-xl text-black">
-                  {content.title}
-                </h2>
-              </div>
-            </Link>
-            <div className="absolute top-0 end-0 p-4 ">
-            <div className="dropdown dropdown-rigt">
-                <button className="btn m-1 icon bg-white text-black border-none shadow-none hover:bg-white  ">
-                  <MoreHorizontal />
-                </button>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content z-[1] menu p-1 shadow text-black bg-white rounded-box w-52 "
-                >
-                  <li>
-                    <a>
-                      แก้ไข
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                     ลบ
-                    </a>
-                  </li>
-                </ul>
+              <Link
+                href={`content/viewcontent/${content.id}`}
+                className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
+              >
+                <figure>
+                  <img
+                    src={
+                      "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
+                    }
+                    alt="imgvideo"
+                  />
+                </figure>
+                <div className="card-body">
+                  <h2 className="card-title font-bold text-xl text-black">
+                    {content.title}
+                  </h2>
+                </div>
+              </Link>
+              <div className="absolute top-0 end-0 p-4 ">
+                <div className="dropdown dropdown-rigt">
+                  <button className="btn m-1 icon bg-white text-black border-none shadow-none hover:bg-white  ">
+                    <MoreHorizontal />
+                  </button>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content z-[1] menu p-1 shadow text-black bg-white rounded-box w-52 "
+                  >
+                    <li>
+                      <Link href={"http://localhost:3000/content/editcontent"}>
+                        แก้ไข
+                      </Link>
+                    </li>
+                    <li>
+                      <div onClick={() => handleDelete(content.id)}>ลบ</div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
           ))}
         </div>
       </div>

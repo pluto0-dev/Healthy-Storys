@@ -62,9 +62,9 @@ const EditBlog = () => {
                   className="dropdown-content z-[1] menu p-1 shadow text-black bg-white rounded-box w-52 "
                 >
                   <li>
-                    <a>
+                    <Link href={""}>
                       แก้ไข
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a>

@@ -1,4 +1,7 @@
-const CreateContent = () => {
-    return <h1 className="mt-20">Create content</h1>
+import CreateContent from "@/components/Contents/CreateContent"
+const createContent = () => {
+    return (
+        <CreateContent/>
+    )
 }
-export default CreateContent
+export default createContent
