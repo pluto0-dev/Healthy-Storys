@@ -90,7 +90,7 @@ const Navbar = () => {
           {isLoggedIn && haveBlog && (
             <ul className="menu menu-horizontal px-1">
               <li className="">
-                <Link href={`/blogs/edit/${Cookies.get("token")}`}>
+                <Link href={`/myblog/${Cookies.get("token")}`}>
                   My Blog
                 </Link>
               </li>
@@ -153,7 +153,7 @@ const Navbar = () => {
                     >
                       <div className="avatar">
                         <div className="w-12 rounded-full">
-                          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                          <img src="/profile.png" />
                         </div>
                       </div>
                     </div>

@@ -71,7 +71,6 @@ const Register = () => {
   
       alert('Registration successful!');
       router.push('/login');
-      // Redirect to Home page
     } catch (error) {
       console.error('Error registering user:', error);
     }
