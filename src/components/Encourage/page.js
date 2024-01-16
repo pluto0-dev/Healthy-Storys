@@ -39,7 +39,7 @@ const PopUp = () => {
 
     const timer = setInterval(() => {
       fetchMotivation();
-    }, 300000);
+    }, 50000000);
 
     return () => {
       clearInterval(timer);

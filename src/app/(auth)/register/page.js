@@ -98,8 +98,8 @@ const Register = () => {
           </figure>
           <form className="flex justify-center card-body mx-24" onSubmit={handleProfileSubmit}>
             <div className="form-control">
-              <h1 className="mt-1 text-black font-bold text-5xl">Hello!</h1>
-              <h2 className="text-black text-lg mt-10">Register to get started</h2>
+              <h1 className="mt-1 text-black font-bold text-5xl">สวัสดี!</h1>
+              <h2 className="text-black text-lg mt-10">ลงทะเบียนเพื่อเริ่มต้น</h2>
 
               {['email', 'username', 'password', 'confirmPassword'].map((field) => (
                 <div key={field} className="input-box my-2">
@@ -116,7 +116,6 @@ const Register = () => {
                   {errors[field] && <div className="text-red-500">{errors[field]}</div>}
                 </div>
               ))}
-
               <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
                 <input type="submit" value="Register" className="w-11/12"/>
               </div>

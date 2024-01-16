@@ -4,7 +4,6 @@ import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
-
 const directus = new Directus("http://localhost:8055");
 const assetsUrl = "http://localhost:8055/assets";
 
@@ -13,14 +12,12 @@ const Navbar = () => {
   const [haveBlog, setHaveBlog] = useState(false);
   const [user, setUser] = useState();
   const router = useRouter();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userId = Cookies.get("token");
-        const userData = await directus
-          .items("user")
-          .readOne(userId);
-         // , { fields: ["image_profile"] }
+        const userData = await directus.items("user").readOne(userId);
         setUser(userData);
       } catch (error) {
         console.log(error);
@@ -28,6 +25,7 @@ const Navbar = () => {
     };
     fetchUser();
   }, []);
+
   useEffect(() => {
     const checkBlog = async () => {
       try {
@@ -63,15 +61,15 @@ const Navbar = () => {
     Cookies.remove("token");
     setIsLoggedIn(false);
     router.push("/login");
-  };
 
+  };
   const commonMenuItems = (
     <ul className="menu menu-horizontal px-1">
       <li>
-        <Link href="/">HOME</Link>
+        <Link href="/">หน้าหลัก</Link>
       </li>
       <li>
-        <Link href="/about">ABOUT</Link>
+        <Link href="/about">เกี่ยวกับ</Link>
       </li>
     </ul>
   );
@@ -91,7 +89,7 @@ const Navbar = () => {
             <ul className="menu menu-horizontal px-1">
               <li className="">
                 <Link href={`/myblog/${Cookies.get("token")}`}>
-                  My Blog
+                  บล็อกของฉัน
                 </Link>
               </li>
             </ul>
@@ -116,10 +114,7 @@ const Navbar = () => {
                               alt="User Avatar"
                             />
                           ) : (
-                            <img
-                              src="/profile.png"
-                              alt="Default Avatar"
-                            />
+                            <img src="/profile.png" alt="Default Avatar" />
                           )}
                         </div>
                       </div>
@@ -129,10 +124,12 @@ const Navbar = () => {
                       className="dropdown-content z-[1] menu p-2 shadow bg-[#eef2ef] rounded-box w-52 text-[#587F61]"
                     >
                       <li>
-                        <Link href={`/profile/${Cookies.get("token")}}`}>Edit Profile</Link>
+                        <Link href={`/profile/${Cookies.get("token")}}`}>
+                          แก้ไขโปรไฟล์
+                        </Link>
                       </li>
                       <li>
-                        <a onClick={handleLogout}>Logout</a>
+                        <a onClick={handleLogout}>ล็อกเอาท์</a>
                       </li>
                     </ul>
                   </div>
@@ -143,7 +140,7 @@ const Navbar = () => {
                     href="/blogs/create"
                     className="btn btn-ghost btn-circle text-white text-l font-bold bg-[#587F61] drop-shadow-lg w-48 mr-6 rounded-[10px] justify-center items-center gap-2.5 hover:bg-[#496950]"
                   >
-                    + Create your news blog
+                    + สร้างบล็อกข่าวของคุณ
                   </Link>
                   <div className="dropdown dropdown-end">
                     <div
@@ -162,10 +159,10 @@ const Navbar = () => {
                       className="dropdown-content z-[1] menu p-2 shadow bg-[#eef2ef] rounded-box w-52 text-[#587F61]"
                     >
                       <li>
-                        <Link href={`/profile/`}>Edit Profile</Link>
+                        <Link href={`/profile/`}>แก้ไขโปรไฟล์</Link>
                       </li>
                       <li>
-                        <a onClick={handleLogout}>Logout</a>
+                        <a onClick={handleLogout}>ล็อกเอาท์</a>
                       </li>
                     </ul>
                   </div>
@@ -175,14 +172,14 @@ const Navbar = () => {
           ) : (
             <>
               <Link href="/login" className="btn btn-ghost text-black">
-                Login
+                ล็อกอิน
               </Link>
               <div className="ml-3">
                 <Link
                   href="/register"
                   className="btn btn-ghost btn-circle text-black bg-white drop-shadow-lg w-36 mr-6"
                 >
-                  Register
+                  ลงทะเบียน
                 </Link>
               </div>
             </>

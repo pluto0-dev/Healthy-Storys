@@ -42,7 +42,14 @@ const Login = () => {
 
         console.log("User logged in successfully:", user);
         alert("Login successful!");
+        
         router.push("/");
+
+        
+        setTimeout(() => {
+            window.location.reload();
+        }, 50);
+        
       } else {
         console.error("Invalid email or password. Please try again.");
         setError("Invalid email or password. Please try again.");

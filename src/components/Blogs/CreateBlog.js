@@ -53,6 +53,9 @@ const CreateBlog = () => {
       console.log("Data sent to Directus:", blogResponse);
   
       router.push("/");
+      setTimeout(() => {
+        window.location.reload();
+    }, 50)
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }
