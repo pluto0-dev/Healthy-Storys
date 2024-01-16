@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Link from "next/link";
-const Blogs = ({ params }) => {
+const Blogs = ({params}) => {
   const directus = new Directus("http://localhost:8055");
+  const assetsUrl = "http://localhost:8055/assets";
   const [user, setUser] = useState({});
   const [blogs, setBlogs] = useState([]);
   const [content, setContent] = useState([]);
@@ -12,10 +13,11 @@ const Blogs = ({ params }) => {
     const fetchUser = async () => {
       try {
         const userResponse = await directus.items("user").readByQuery({
-          filter: { id: params.id },
+          filter: { id},
           limit: 1,
         });
         setUser(userResponse.data);
+        //console.log(userResponse.data)
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -32,6 +34,7 @@ const Blogs = ({ params }) => {
           limit: 1,
         });
         setBlogs(blogResponse.data);
+       //console.log(blogResponse.data)
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
@@ -43,10 +46,9 @@ const Blogs = ({ params }) => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        // Fetch content for the specific user's blogs
         const blogIds = blogs.map(blog => blog.id);
         const contentResponse = await directus.items("content").readByQuery({
-          filter: { blog: { id: { _in: blogIds } } },
+          filter: { blog: { id: { _in: blogIds } }},
         });
         setContent(contentResponse.data);
         console.log(contentResponse.data);
@@ -65,7 +67,7 @@ const Blogs = ({ params }) => {
       <div
         className="flex items-center justify-center bg-white h-[640px]"
         style={{
-          backgroundImage: `url('${""}')`,
+          backgroundImage: `url('${assetsUrl}/${blogs[0]?.banner}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "200px",

@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 const ViewBlog = () => {
   const directus = new Directus("http://localhost:8055");
+  
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {

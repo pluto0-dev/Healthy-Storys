@@ -89,6 +89,7 @@ import { MoreHorizontal } from "react-feather";
 import Cookies from "js-cookie";
 const myBlogs = ({ params }) => {
   const directus = new Directus("http://localhost:8055");
+  const assetsUrl = "http://localhost:8055/assets";
   const [user, setUser] = useState({});
   const [blogs, setBlogs] = useState([]);
   const [content, setContent] = useState([]);
@@ -156,7 +157,7 @@ const authToken = Cookies.get("token")
       <div
         className="flex items-center justify-center bg-white h-[640px]"
         style={{
-          backgroundImage: `url('${""}')`,
+          backgroundImage: `url('${assetsUrl}/${blogs[0]?.banner}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "200px",
@@ -188,7 +189,7 @@ const authToken = Cookies.get("token")
           {content.map((content) => (
             <div key={content.id} className="relative">
               <Link
-                href={`content/viewcontent/${content.id}`}
+                href={`http://localhost:3000/content/viewcontent/${content.id}`}
                 className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
               >
                 <figure>
