@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Cookies from "js-cookie";
-
+import { useRouter } from "next/navigation";
 const authToken = Cookies.get("token");
 const directus = new Directus("http://localhost:8055/");
 
 const EditContent = ({ params }) => {
- 
+ const router =useRouter()
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -44,8 +44,8 @@ const EditContent = ({ params }) => {
           description: formData.description, 
         }
       );
-  
-      console.log("Content updated successfully:", response);
+      alert("Content created successfully");
+      router.push(`/myblog/${Cookies.get("token")}`);
     } catch (error) {
       console.error("Error updating content:", error);
     }
@@ -53,16 +53,16 @@ const EditContent = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-
-  if (type === "file") {
-
-    const file = files[0];
-    
-    console.log("File selected:", file);
-  } else {
-    // Handle other input changes
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  }
+  
+    if (type === "file") {
+      const file = files[0];
+      console.log("File selected:", file);
+  
+      // Handle the file as needed (e.g., save it to state)
+    } else {
+      // Handle other input changes
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
     return (
@@ -103,7 +103,7 @@ const EditContent = ({ params }) => {
                   <span className="font-semibold">or drag and drop</span>
                 </p>
               </div>
-              <input id="dropzone-file" type="file" className="hidden" />
+              <input id="dropzone-file" type="file" className="hidden" onChange={handleInputChange}/>
             </label>
           </div>
   

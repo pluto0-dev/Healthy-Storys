@@ -2,11 +2,12 @@
 import { useState } from "react";
 import { Directus } from "@directus/sdk";
 import Cookies from "js-cookie";
-
+import { useRouter } from "next/navigation";
 const authToken = Cookies.get("token");
 const directus = new Directus("http://localhost:8055/");
 
 const CreateContent = ({ params }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     videoClipName: "",
     details: "",
@@ -30,7 +31,8 @@ const CreateContent = ({ params }) => {
 
       console.log("Content created successfully:", response);
 
-      // Reset the form data
+      alert("Content created successfully");
+      router.push(`/myblog/${Cookies.get("token")}`);
       setFormData({
         videoClipName: "",
         details: "",
