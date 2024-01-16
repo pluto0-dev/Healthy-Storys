@@ -215,7 +215,7 @@ const authToken = Cookies.get("token")
                     className="dropdown-content z-[1] menu p-1 shadow text-black bg-white rounded-box w-52 "
                   >
                     <li>
-                      <Link href={"http://localhost:3000/content/editcontent"}>
+                      <Link href={`http://localhost:3000/content/editcontent/${content.id}`}>
                         แก้ไข
                       </Link>
                     </li>

@@ -8,7 +8,7 @@ import { faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 const Calorie = () => {
     const directus = new Directus("http://localhost:8055");
-    // const userID = Cookies.get("token");
+    const userID = Cookies.get("token");
 
     const [userData, setUserData] = useState(null);
     const [bmr, setBMR] = useState(null);
@@ -35,7 +35,7 @@ const Calorie = () => {
     const fetchUserData = async () => {
         try {
             // const response = await directus.items('user').readOne(userID);
-          const response = await directus.items('user').readOne('bf9e7d39-22ba-42d0-968e-e0d015e28314');
+          const response = await directus.items('user').readOne();
           const userData = response
           setUserData(userData);
         } catch (error) {
