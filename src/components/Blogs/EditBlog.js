@@ -8,6 +8,7 @@ const EditBlog = () => {
   const directus = new Directus("http://localhost:8055");
   const [blogs, setBlogs] = useState([]);
 
+  
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -22,6 +23,7 @@ const EditBlog = () => {
 
     fetchBlogs();
   }, []);
+
 
   return (
     <>

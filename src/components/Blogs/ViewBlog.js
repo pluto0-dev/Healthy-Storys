@@ -27,7 +27,7 @@ const ViewBlog = () => {
       {blogs.map((blog) => (
         <Link
           key={blog.id}
-          href={`/viewblog/${blog.id}`}
+          href={`http://localhost:3000/content/viewcontent/${blog.id}`}
           className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
         >
           <figure>

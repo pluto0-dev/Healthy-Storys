@@ -84,8 +84,8 @@ const Register = () => {
         </figure>
         <form className="flex justify-center card-body mx-24" onSubmit={handleSubmit}>
           <div className="form-control">
-            <h1 className="mt-1 text-black font-bold text-5xl">Hello!</h1>
-            <h2 className="text-black text-lg mt-10">Register to get started</h2>
+            <h1 className="mt-1 text-black font-bold text-5xl">สวัสดี!</h1>
+            <h2 className="text-black text-lg mt-10">ลงทะเบียนเพื่อเริ่มต้น</h2>
 
             {['email', 'username', 'password', 'confirmPassword'].map((field) => (
               <div key={field} className="input-box my-2">
