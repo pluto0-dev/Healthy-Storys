@@ -15,7 +15,7 @@ const Blogs = ({ params }) => {
   return (
     <>
      <div
-      className="flex items-center justify-center bg-black h-[640px]"
+      className="flex items-center justify-center bg-white h-[640px]"
       style={{
         backgroundImage: `url('${user.avatar}')`,
         backgroundSize: "cover",
@@ -24,8 +24,8 @@ const Blogs = ({ params }) => {
       }}
     >
       <div className="absolute left-0 ml-5 mt-[400px] ">
-        <div className="font-bold text-2xl text-black">{user.username}</div>
-        <div className="mt-5 text-black">{user.description}</div>
+        <div className="font-bold text-2xl text-black">username</div>
+        <div className="mt-5 text-black">description</div>
       </div>
       
     </div>
