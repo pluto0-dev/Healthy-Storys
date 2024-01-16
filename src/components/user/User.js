@@ -7,6 +7,7 @@ import { Directus } from "@directus/sdk";
 const User = () => {
   const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
+  const [searchValue, setSearchValue] = useState(""); // Add search state here
   const assetsUrl = "http://localhost:8055/assets";
 
   useEffect(() => {
@@ -44,9 +45,22 @@ const User = () => {
     fetchUsers();
   }, []);
 
+  // Filter users based on the searchValue
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchValue.toLowerCase())
+  );
   return (
+    <>
+    <div className="form-control w-2/4">
+          <input
+            type="text"
+            placeholder="กดเพื่อค้นหา"
+            className="input input-bordered w-full placeholder-[#ffff] text-[#ffff]"
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-      {users.map((currentUser) => (
+    {filteredUsers.map((currentUser) => (
         <Link key={currentUser.id} href={`/blogs/viewblog/${currentUser.id}`}>
           <div className="card w-[350px] h-[400px] bg-base-100 shadow-xl relative">
             <div
@@ -69,6 +83,7 @@ const User = () => {
         </Link>
       ))}
     </div>
+    </>
   );
 };
 

@@ -34,15 +34,18 @@ const VideoPlayer = ({ params }) => {
       ) : (
         <>
           {content && (
+            <div style={{ width: '990px', height: '680px', backgroundColor: 'black' }}>
             <ReactPlayer
-              width="990px"
-              height="680px"
+              width="100%"
+              height="100%"
               controls={true}
               light={false}
               pip={true}
               url={`${assetsUrl}/${content.video}`}
               playing={true}
             />
+          </div>
+            
           )}
 
           <div className="mx-5">
