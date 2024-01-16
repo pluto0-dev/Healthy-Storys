@@ -1,80 +1,63 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Directus } from "@directus/sdk";
 import Cookies from "js-cookie";
 
-const directus = new Directus("http://localhost:8055/"); // Update the URL to your Directus API endpoint
+
+const directus = new Directus("http://localhost:8055/");
 
 const CreateBlog = () => {
+    const form = document.querySelector('#dropzone-file');
   const router = useRouter();
-  const userID = Cookies.get("token");
-
   const [formData, setFormData] = useState({
-    user: {
-      id: null
-    },
+    description: "",
     banner: null,
     bannerName: "",
-    details: ""
   });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await directus.items("user").readOne(userID);
-        setFormData((prevData) => ({ ...prevData, user }));
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    if (userID) {
-      fetchUser();
-    }
-  }, [userID]);
-
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prevData) => ({
-      ...prevData,
-      banner: file,
-      bannerName: file?.name || ""
-    }));
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData({
+      ...formData,
+      banner: form,
+      bannerName: file.name,
+    });
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!Cookies.get("token")) {
+      console.error("User ID is missing or invalid.");
+      // Display a message on the UI or redirect to login
+      return;
+    }
+  
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("user", formData.user.id);
-      formDataToSend.append("details", formData.details);
-      formDataToSend.append("banner", formData.banner);
-
-      const response = await directus.items("blog").createOne(formDataToSend);
-
-      console.log("Content created successfully:", response);
-
-      setFormData({
+      // Now create the blog entry with the file ID
+      const blogResponse = await directus.items("blog").createOne({
         user: {
-          id: null
+          id: Cookies.get("token"),
         },
-        banner: null,
-        bannerName: "",
-        details: ""
+        banner: form,
+        description: formData.description,
       });
-
+  
+      console.log("Data sent to Directus:", blogResponse);
+  
       router.push("/");
     } catch (error) {
-      console.error("Error creating content:", error);
+      console.error("Error sending data to Directus:", error);
     }
   };
+
   return (
     <>
       <form onSubmit={handleFormSubmit}>
@@ -115,7 +98,7 @@ const CreateBlog = () => {
               </div>
               <input
                 id="dropzone-file"
-                name="dropzone"
+                name="file"
                 type="file"
                 className="hidden"
                 onChange={handleFileChange}
@@ -136,8 +119,8 @@ const CreateBlog = () => {
               placeholder="Describe the details of your video clip."
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
               required
-              name="details"
-              value={formData.details}
+              name="description"
+              value={formData.description}
               onChange={handleInputChange}
             />
           </div>

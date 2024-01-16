@@ -1,62 +1,87 @@
-// Navbar.js
 "use client";
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
-import { useRouter } from "next/navigation"; // Correct import
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
-const directus = new Directus("http://localhost:8055/");
+const directus = new Directus(process.env.DIRECTUS_BASE_URL);
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [haveBlog, setHaveBlog] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkBlog = async () => {
+      try {
+        const response = await directus.items("user").readByQuery({ sort: ["id"] });
+
+        const filteredUsers = await Promise.all(
+          response.data.map(async (user) => {
+            const blogsResponse = await directus.items("blog").readByQuery({
+              filter: { user: user.id },
+              limit: 1,
+            });
+            return blogsResponse.data.length > 0 ? user : null;
+          })
+        );
+
+        setHaveBlog(filteredUsers.some((user) => user !== null));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    checkBlog();
+  }, []);
 
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
         const authToken = Cookies.get("token");
-
-        if (authToken) {
-          // You can make an API call to verify the token on the server
-          // For simplicity, assuming the token is valid for now
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
+        setIsLoggedIn(!!authToken);
       } catch (error) {
         console.error("Error checking authentication:", error);
       }
     };
 
     checkAuthentication();
-  }, [router.pathname]); // Add router.pathname to dependencies
+  }, [router?.pathname]);
 
   const handleLogout = () => {
-    // Clear the authentication cookie and update the state
     Cookies.remove("token");
     setIsLoggedIn(false);
-    // Redirect to the login page
     router.push("/login");
   };
+
+  const commonMenuItems = (
+    <ul className="menu menu-horizontal px-1">
+      <li>
+        <Link href="/">HOME</Link>
+      </li>
+      <li>
+        <Link href="/about">ABOUT</Link>
+      </li>
+    </ul>
+  );
   return (
-    <div className="navbar bg-[#eef2ef] fixed w-full z-10 top-0 text-black">
-      <div className="navbar-start">
-        <div className="dropdown"></div>
-        <a className="btn btn-ghost text-2xl text-black ml-6 p-0">
-          HealthStory
-        </a>
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <Link href="/">HOME</Link>
-          </li>
-          <li>
-            <Link href="/about">ABOUT</Link>
-          </li>
-        </ul>
-      </div>
+    <>
+      <div className="navbar bg-[#eef2ef] fixed w-full z-10 top-0 text-black">
+        <div className="navbar-start">
+          <div className="dropdown"></div>
+          <a className="btn btn-ghost text-2xl text-black ml-6 p-0">
+            HealthStory
+          </a>
+        </div>
+        <div className="navbar-center hidden lg:flex">
+          {commonMenuItems}
+          {isLoggedIn && haveBlog ? (
+            <li>
+              <Link href={`/blogs/${Cookies.get('token')}`}>My Blog</Link>
+            </li>
+          ) : null}
+        </div>
       <div className="navbar-end">
         {isLoggedIn ? (
           <>
@@ -85,7 +110,7 @@ const Navbar = () => {
                   <a onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
-            </div>
+            </div>  
           </>
         ) : (
           <>
@@ -104,6 +129,7 @@ const Navbar = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
