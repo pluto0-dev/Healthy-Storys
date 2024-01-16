@@ -1,7 +1,9 @@
 import Navbar from "@/components/navbar/Navbar";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Fighting from "@/components/Fighting/Fighting";
+// import Fighting from "@/components/Fighting/Fighting";
+import PopUp from "@/components/Encourage/page";
+import Calorie from "@/components/Calorie/page";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Navbar />
           {children}
-          <Fighting />
+          <PopUp />
+          <Calorie />
+          {/* <Fighting /> */}
       </body>
     </html>
   );
