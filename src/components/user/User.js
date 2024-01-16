@@ -7,7 +7,7 @@ import { Directus } from "@directus/sdk";
 const User = () => {
   const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
-  const assetsUrl = process.env.NEXTAUTH_URL;
+  const assetsUrl = "http://localhost:8055/assets";
 
   useEffect(() => {
     const fetchUsers = async () => {

@@ -8,11 +8,10 @@ import Cookies from "js-cookie";
 const directus = new Directus("http://localhost:8055/");
 
 const CreateBlog = () => {
-    const form = document.querySelector('#dropzone-file');
   const router = useRouter();
   const [formData, setFormData] = useState({
     description: "",
-    banner: null,
+    banner: "",
     bannerName: "",
   });
 
@@ -26,7 +25,7 @@ const CreateBlog = () => {
     const file = e.target.files[0];
     setFormData({
       ...formData,
-      banner: form,
+      banner: formData.file,
       bannerName: file.name,
     });
   };
@@ -39,6 +38,7 @@ const CreateBlog = () => {
       // Display a message on the UI or redirect to login
       return;
     }
+
   
     try {
       // Now create the blog entry with the file ID
@@ -46,7 +46,7 @@ const CreateBlog = () => {
         user: {
           id: Cookies.get("token"),
         },
-        banner: form,
+        banner: formData.file,
         description: formData.description,
       });
   

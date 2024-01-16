@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import BlogList from "@/components/Contents/BlogList";
+import ViewBlog from "@/components/Blogs/ViewBlog";
 const Blogs = ({ params }) => {
   const [user, setUser] = useState([]);
   const { id } = params;
@@ -30,7 +30,7 @@ const Blogs = ({ params }) => {
       
     </div>
     <div className="flex items-end justify-end">
-    <BlogList />
+    <ViewBlog />
   </div>
     </>
    
