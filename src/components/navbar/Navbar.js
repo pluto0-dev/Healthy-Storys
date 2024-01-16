@@ -19,8 +19,8 @@ const Navbar = () => {
         const userId = Cookies.get("token");
         const userData = await directus
           .items("user")
-          .readOne(userId, { fields: ["image_profile"] });
-
+          .readOne(userId);
+         // , { fields: ["image_profile"] }
         setUser(userData);
       } catch (error) {
         console.log(error);
@@ -129,7 +129,7 @@ const Navbar = () => {
                       className="dropdown-content z-[1] menu p-2 shadow bg-[#eef2ef] rounded-box w-52 text-[#587F61]"
                     >
                       <li>
-                        <Link href={`/profile/`}>Edit Profile</Link>
+                        <Link href={`/profile/${Cookies.get("token")}}`}>Edit Profile</Link>
                       </li>
                       <li>
                         <a onClick={handleLogout}>Logout</a>
