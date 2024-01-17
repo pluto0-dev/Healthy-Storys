@@ -70,7 +70,7 @@ const EditContent = ({ params }) => {
        <form onSubmit={handleFormSubmit}>
         <div className="flex justify-end mr-[300px]">
           <div className="w-[166px] h-[60px] px-10 py-2.5 rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex ">
-            <input type="Submit" value="Update" className="" />
+            <input type="Submit" value="อัพเดต" className="" />
           </div>
         </div>
   
@@ -109,7 +109,7 @@ const EditContent = ({ params }) => {
   
           <div className="input-box flex justify-center mt-5">
             <div className="text-black text-2xl font-bold my-auto mr-5">
-              Video clip name
+            ชื่อคลิป
             </div>
             <input
               type="text"
@@ -123,7 +123,7 @@ const EditContent = ({ params }) => {
           </div>
           <div className="input-box flex justify-start mt-5 ml-[312px]">
             <div className="text-black text-2xl font-bold  mr-[125px] ">
-              Details
+            คำอธิบาย
             </div>
             <textarea
               type="text"

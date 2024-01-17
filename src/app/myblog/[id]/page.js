@@ -85,15 +85,18 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Link from "next/link";
-import { MoreHorizontal } from "react-feather";
+import { MoreHorizontal,AlertCircle,Trash2 } from "react-feather";
 import Cookies from "js-cookie";
+
 const myBlogs = ({ params }) => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
   const [user, setUser] = useState({});
   const [blogs, setBlogs] = useState([]);
   const [content, setContent] = useState([]);
-const authToken = Cookies.get("token")
+  const authToken = Cookies.get("token");
+  const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const [contentToDelete, setContentToDelete] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -142,11 +145,23 @@ const authToken = Cookies.get("token")
 
     fetchContent();
   }, [blogs]);
+  const openConfirmation = (contentId) => {
+    setContentToDelete(contentId);
+    setConfirmationOpen(true);
+  };
 
-  const handleDelete = async (contentId) => {
+  const closeConfirmation = () => {
+    setContentToDelete(null);
+    setConfirmationOpen(false);
+  };
+
+  const handleDelete = async () => {
     try {
-      await directus.items("content").deleteOne(contentId);
-      setContent((prevContent) => prevContent.filter((item) => item.id !== contentId));
+      await directus.items("content").deleteOne(contentToDelete);
+      setContent((prevContent) =>
+        prevContent.filter((item) => item.id !== contentToDelete)
+      );
+      closeConfirmation();
     } catch (error) {
       console.log("Error deleting content:", error);
     }
@@ -172,13 +187,13 @@ const authToken = Cookies.get("token")
       </div>
       <div className="flex  mt-5 item-center justify-end mr-[410px]">
         <Link
-          href={`/content/editcontent/${authToken}`}
+          href={`/blogs/editblog/${blogs[0]?.id}`}
           className="w-1/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
         >
           <input type="submit" value="แก้ไขบล็อก" className="ml-4" />
         </Link>
         <Link
-          href={`/content/createcontent/${authToken}`}
+          href={`/content/createcontent/${params.id}`}
           className="w-2/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
         >
           <input type="submit" value="+ สร้างคอนเทนต์ของคุณ" className="ml-5" />
@@ -216,16 +231,42 @@ const authToken = Cookies.get("token")
                     className="dropdown-content z-[1] menu p-1 shadow text-black bg-white rounded-box w-52 "
                   >
                     <li>
-                      <Link href={`http://localhost:3000/content/editcontent/${content.id}`}>
+                      <Link
+                        href={`http://localhost:3000/content/editcontent/${content.id}`}
+                      >
                         แก้ไข
                       </Link>
                     </li>
                     <li>
-                      <div onClick={() => handleDelete(content.id)}>ลบ</div>
+                      <div onClick={() => openConfirmation(content.id)}>ลบ</div>
                     </li>
                   </ul>
                 </div>
               </div>
+              {isConfirmationOpen && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+                  <div className="bg-white p-8 rounded-md ">
+                    <div className="text-xl font-bold mb-4 text-black inline-flex items-center"><AlertCircle className="mx-2 text-red-600 font-bold"/> ลบคอนเทนต์</div>
+                    <p className="mb- text-neutral-600">คุณต้องการลบข้อมูลนี้หรือไม่? หากถูกลบออกไป ข้อมูลดังกล่าวจะไม่สามารถกู้คืนได้</p>
+                    <div className="flex justify-end  mt-6">
+                      
+                      <button
+                        onClick={closeConfirmation}
+                        className="text-neutral-500 px-4 py-2 rounded-md mx-2 border-2"
+                      >
+                        ยกเลิก
+                      </button>
+                      <button
+                        onClick={handleDelete}
+                        className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
+                      >
+                        <div className=" inline-flex items-center justify-center  mt-2"><Trash2 className="mx-1"/>
+                        ยืนยันการลบข้อมูล</div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

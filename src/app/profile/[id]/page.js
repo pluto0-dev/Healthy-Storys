@@ -55,9 +55,9 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start h-screen">
+    <div className="flex flex-col items-center justify-start h-screen bg-[url('/bg3.png')] bg-center bg-cover">
       <div className="text-center text-white text-5xl font-normal font-['Lalezar'] mb-8 mt-28">
-        Profile
+      โปรไฟล์
       </div>
       <div className="flex items-center justify-center ml-6 mb-6">
         <div className="avatar mr-4">
@@ -95,11 +95,11 @@ const Profile = () => {
 
       <div className="card w-2/4 h-3/6 bg-[#eef2ef] shadow-xl">
         <form className="card-body text-[#587F61]" onSubmit={handleSubmit}>
-          <div className="form-control">
-            <div className="input-box mb-2 ml-36 mr-0 mx-2">
-              Username
+          <div className="form-control justify-center">
+            <div className="input-box mb-2 ml-36 mr-0 mx-2 ">
+ชื่อผู้ใช้
               <input
-                type="text"
+              type="text"
                 name="username"
                 placeholder="Enter your username"
                 value={user.username}
@@ -109,19 +109,20 @@ const Profile = () => {
               />
             </div>
             <div className="input-box my-2 ml-36 mr-0">
-              Age
+            อายุ
               <input
                 type="text"
                 name="age"
                 placeholder="Enter your age"
                 value={user.age}
                 onChange={handleInputChange}
-                className="input input-bordered w-2/4 max-w-ws bg-[#cbd7ce] placeholder-[#587F61] ml-16"
+                className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] mx-9"
                 required
               />
+              อายุ 15-80
             </div>
             <div className="inline-flex items-center ml-36 mr-0 mx-2">
-              Gender
+            เพศ
               <input
                 type="radio"
                 id="male"
@@ -131,7 +132,7 @@ const Profile = () => {
                 onChange={handleInputChange}
                 className="radio checked:bg-[#587F61] ml-10"
               />
-              <label htmlFor="male">Male</label>
+              <label htmlFor="male">ชาย</label>
               <input
                 type="radio"
                 id="female"
@@ -141,28 +142,28 @@ const Profile = () => {
                 onChange={handleInputChange}
                 className="radio checked:bg-[#587F61] ml-10"
               />
-              <label htmlFor="female">Female</label>
+              <label htmlFor="female">หญิง</label>
             </div>
 
             <div className="input-box my-2 ml-36 mr-0 ">
-              Height
+            ความสูง
               <input
                 type="text"
                 name="height"
                 placeholder="Enter your height"
-                className="input input-bordered w-2/4 max-w-ws bg-[#cbd7ce] placeholder-[#587F61] ml-11"
+                className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] ml-3"
                 value={user.height}
                 onChange={handleInputChange}
                 required
               />
             </div>
             <div className="input-box my-2 ml-36 mr-0">
-              Weight
+            น้ำหนัก
               <input
                 type="text"
                 name="weight"
                 placeholder="Enter your weight"
-                className="input input-bordered w-2/4 max-w-ws bg-[#cbd7ce] placeholder-[#587F61] ml-[41px]"
+                className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] ml-[18px]"
                 value={user.weight}
                 onChange={handleInputChange}
                 required
@@ -170,32 +171,32 @@ const Profile = () => {
             </div>
 
             <div className="dropdown ml-36 mr-0">
-              Activity
+            ความถี่
               <select
                 value={user.frequency}
                 onChange={handleInputChange}
-                className="btn m-1 bg-[#cbd7ce] w-2/4 max-w-ws ml-[37px] border-none text-[#587F61]  hover:bg-[#bcc7bf]"
+                className="btn m-1 bg-[#cbd7ce] w-2/4 ml-[20px] border-none text-[#587F61]  hover:bg-[#bcc7bf]"
                 name="frequency"
               >
                 <option value="">Select Activity</option>
-                <option value="2">Sedentary : little or no exercise</option>
-                <option value="Light">Light : exercise 1-3 times/week</option>
-                <option value="3">Moderate : exercise 4-5 times/week</option>
+                <option value="1">ออกกำลังกายน้อยหรือไม่มีเลย</option>
+                <option value="2">ออกกำลังกาย 1-3 ครั้ง/สัปดาห์</option>
+                <option value="3">ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</option>
                 <option value="4">
-                  Active : daily exercise or intense exercise 3-4 times/week
+                ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
                 </option>
                 <option value="5">
-                  Very Active : intense exercise 6-7 times/week
+                ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์
                 </option>
                 <option value="6">
-                  Extra Active : very intense exercise daily, or physical job
+                การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ
                 </option>
               </select>
             </div>
 
-            <div className="flex items-center justify-center mt-2">
-              <div className="flex w-6/12 justify-center rounded-md bg-[#587F61] mx-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] ">
-                <input type="submit" value="Calculate" className="max-w-xs" />
+            <div className="flex items-center justify-center mt-2 w-3/4 max-w-ws">
+              <div className="flex w-2/4 justify-center rounded-md bg-[#587F61] ml-[130px] py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] ">
+                <input type="submit" value="บันทึก" className="max-w-ws" />
               </div>
             </div>
           </div>

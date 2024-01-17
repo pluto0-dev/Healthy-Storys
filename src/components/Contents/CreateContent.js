@@ -1,69 +1,65 @@
 "use client";
-import { useState } from "react";
-import { Directus } from "@directus/sdk";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-const authToken = Cookies.get("token");
-const directus = new Directus("http://localhost:8055/");
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Directus } from '@directus/sdk';
+import Cookies from 'js-cookie';
+
+const authToken = Cookies.get('token');
+const directus = new Directus('http://localhost:8055/');
 
 const CreateContent = ({ params }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    videoClipName: "",
-    details: "",
+    videoClipName: '',
+    details: '',
   });
- 
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Fetch the user's blog
-      const userBlog = await directus.items("blog").readByQuery({
+      const userBlog = await directus.items('blog').readByQuery({
         filter: { user: authToken },
         limit: 1,
       });
 
-      const response = await directus.items("content").createOne({
+      const response = await directus.items('content').createOne({
         blog: userBlog.data[0].id,
         title: formData.videoClipName,
         description: formData.details,
       });
 
-      console.log("Content created successfully:", response);
+      console.log('Content created successfully:', response);
 
-      alert("Content created successfully");
-      router.push(`/myblog/${Cookies.get("token")}`);
+      alert('Content created successfully');
+      router.push(`/myblog/${Cookies.get('token')}`);
       setFormData({
-        videoClipName: "",
-        details: "",
+        videoClipName: '',
+        details: '',
       });
     } catch (error) {
-      console.error("Error creating content:", error);
+      console.error('Error creating content:', error);
     }
   };
 
-
-
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-  
-    // If the input is a file input, store the file in formData
-    if (name === "dropzone" && files.length > 0) {
+
+    if (name === 'video' && files.length > 0) {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0], // Assuming you only want to handle one file
+        [name]: files[0],
       }));
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
+    }
   };
-
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <div className="flex justify-end mr-[300px]">
-        <div className="w-[133px] h-[60px] px-10 py-2.5 rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
-          <input type="submit" value="Post" className="" />
+      <div className="flex justify-end mr-[300px] mt-6">
+        <div className="item-center justify-center w-[133px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
+          <input type="submit" value="โพสต์" className="" />
         </div>
       </div>
 
@@ -90,15 +86,15 @@ const CreateContent = ({ params }) => {
                 />
               </svg>
               <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                <span className="font-semibold">Click to upload</span>
+                <span className="font-semibold">เพิ่มรูปภาพ</span>
               </p>
               <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                <span className="font-semibold">or drag and drop</span>
+                <span className="font-semibold">หรือลากและวาง</span>
               </p>
             </div>
             <input
               id="dropzone-file"
-              name="dropzone"
+              name="video"
               type="file"
               className="hidden"
               onChange={handleInputChange}
@@ -107,12 +103,12 @@ const CreateContent = ({ params }) => {
         </div>
 
         <div className="input-box flex justify-center mt-5">
-          <div className="text-black text-2xl font-bold my-auto mr-5">
-            Video clip name
-          </div>
+        <div className="text-black text-2xl font-bold my-auto mr-[120px]">
+            ชื่อคลิป
+            </div>
           <input
             type="text"
-            placeholder="Please enter the name of your video clip"
+            placeholder="กรุณากรอกชื่อคลิปวิดีโอของคุณ"
             className="input w-[850px] h-[50px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
             required
             name="videoClipName"
@@ -120,13 +116,13 @@ const CreateContent = ({ params }) => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="input-box flex justify-start mt-5 ml-[312px]">
-          <div className="text-black text-2xl font-bold  mr-[125px] ">
-            Details
-          </div>
+        <div className="input-box flex justify-start mt-5 ml-[319px]">
+            <div className="text-black text-2xl font-bold  mr-[96px] ">
+            คำอธิบาย
+            </div>
           <textarea
             type="text"
-            placeholder="Describe the details of your video clip."
+            placeholder="อธิบายรายละเอียดคลิปวิดีโอของคุณ"
             className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
             required
             name="details"

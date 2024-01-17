@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Directus } from "@directus/sdk";
-
+import { MoreHorizontal } from "react-feather";
 const User = () => {
   const directus = new Directus("http://localhost:8055");
   const [users, setUsers] = useState([]);
@@ -55,9 +55,10 @@ const User = () => {
           <input
             type="text"
             placeholder="กดเพื่อค้นหา"
-            className="input input-bordered w-full placeholder-[#ffff] text-[#ffff]"
+            className="input input-bordered w-full placeholder-[#587F61] text-[#587F61] bg-[#EEF2EF]" 
             onChange={(e) => setSearchValue(e.target.value)}
           />
+
         </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
     {filteredUsers.map((currentUser) => (

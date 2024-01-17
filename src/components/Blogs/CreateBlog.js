@@ -55,7 +55,7 @@ const CreateBlog = () => {
       router.push("/");
       setTimeout(() => {
         window.location.reload();
-    }, 50)
+    }, 100)
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }
@@ -64,9 +64,9 @@ const CreateBlog = () => {
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-        <div className="flex justify-end mr-[300px]">
+        <div className="flex justify-end mr-[300px] mt-6">
           <div className="w-[133px] h-[60px] item-center justify-center rounded-md bg-[#587F61] text-white text-xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
-            <input type="submit" value="save blog" className="" />
+            <input type="submit" value="สร้างบล็อก" className="" />
           </div>
         </div>
 
@@ -93,10 +93,10 @@ const CreateBlog = () => {
                   />
                 </svg>
                 <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                  <span className="font-semibold">Click to upload</span>
+                  <span className="font-semibold">เพิ่มรูปภาพ</span>
                 </p>
                 <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                  <span className="font-semibold">or drag and drop</span>
+                  <span className="font-semibold">หรือลากและวาง</span>
                 </p>
               </div>
               <input
@@ -115,11 +115,11 @@ const CreateBlog = () => {
           </div>
           <div className="input-box flex justify-start mt-5 ml-[312px]">
             <div className="text-black text-2xl font-bold  mr-[125px] ">
-              Details
+            คำอธิบาย
             </div>
             <textarea
               type="text"
-              placeholder="Describe the details of your video clip."
+              placeholder="อธิบายรายละเอียดบล็อกของคุณ"
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
               required
               name="description"

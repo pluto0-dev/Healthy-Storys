@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar bg-[#eef2ef] fixed w-full z-10 top-0 text-black">
+      <div className="navbar bg-[#eef2ef] fixed w-full z-10 top-0 text-black drop-shadow-md">
         <div className="navbar-start">
           <div className="dropdown"></div>
           <a className="btn btn-ghost text-2xl text-black ml-6 p-0">
