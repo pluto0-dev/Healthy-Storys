@@ -64,7 +64,7 @@ const Navbar = () => {
 
   };
   const commonMenuItems = (
-    <ul className="menu menu-horizontal px-1">
+    <ul className="menu menu-horizontal px-1 items-center justify-center">
       <li>
         <Link href="/">หน้าหลัก</Link>
       </li>
@@ -82,8 +82,7 @@ const Navbar = () => {
           <a className="btn btn-ghost text-2xl text-black ml-6 p-0">
             HealthStory
           </a>
-        </div>
-        <div className="navbar-center hidden lg:flex">
+          <div className="navbar-center">
           {commonMenuItems}
           {isLoggedIn && haveBlog && (
             <ul className="menu menu-horizontal px-1">
@@ -95,6 +94,8 @@ const Navbar = () => {
             </ul>
           )}
         </div>
+        </div>
+        
         <div className="navbar-end">
           {isLoggedIn ? (
             <>

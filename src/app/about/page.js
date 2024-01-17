@@ -11,7 +11,7 @@ const About = async () => {
   });
   //bg-[url('/bg3.png')] bg-center bg-cover
   return (
-    <div className="flex scroll-mx-1.5 h-screen ">
+    <div className="flex scroll-mx-1.5 h-screen bg-[url('/bg2.png')] bg-center bg-cover">
       <div className="w-1/2 flex items-center">
         <img src="bg1.png" className="w-771 h-771 flex-shrink-0" />
       </div>
