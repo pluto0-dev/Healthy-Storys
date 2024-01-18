@@ -27,15 +27,12 @@ const CreateContent = ({ params }) => {
         limit: 1,
       });
 
-      const response = await directus.files.createOne({
-        
-      });
+      
 
       const contentData = {
         blog: userBlog.data[0].id,
         title: formData.videoClipName,
         description: formData.details,
-        file: response.data.id, // Use the file ID obtained from Directus
       };
 
       await directus.items("content").createOne(contentData);

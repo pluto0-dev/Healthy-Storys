@@ -1,30 +1,44 @@
 "use client";
-import { useState } from 'react';
-import { Directus } from '@directus/sdk';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { Directus } from "@directus/sdk";
+import { useRouter } from "next/navigation";
 
 const RadioInput = ({ id, name, value, label, onChange }) => (
   <label htmlFor={id} className="flex items-center">
-    <input type="radio" id={id} name={name} value={value} className="mr-2" onChange={onChange} />
+    <input
+      type="radio"
+      id={id}
+      name={name}
+      value={value}
+      className="mr-2"
+      onChange={onChange}
+    />
     {label}
   </label>
 );
 
-const Dropdown = ({ selectedActivity, toggleDropdown, isDropdownOpen, handleActivitySelect }) => (
+const Dropdown = ({
+  selectedActivity,
+  toggleDropdown,
+  isDropdownOpen,
+  handleActivitySelect,
+}) => (
   <div className="dropdown mx-6 relative">
     <div
       tabIndex={0}
       role="button"
-      className="btn m-1 bg-[#cbd7ce] w-full ml-[20px] border-none text-[#587F61]  hover:bg-[#bcc7bf]"
+      className="btn w-[485px] bg-gray-100 text-green-700 border-none text-center rounded-md py-2 px-4   hover:bg-gray-200"
       onClick={toggleDropdown}
     >
       {selectedActivity}
     </div>
     <ul
       tabIndex={0}
-      className={`dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52 absolute ${isDropdownOpen ? "" : "hidden"}`}
+      className={`dropdown-content z-[1] menu p-2 w-[485px] shadow bg-white rounded-box mt-2 absolute ${
+        isDropdownOpen ? "" : "hidden"
+      }`}
     >
-       <li onClick={() => handleActivitySelect("ออกกำลังกายน้อย")}>
+      <li onClick={() => handleActivitySelect("ออกกำลังกายน้อย")}>
         <a>ออกกำลังกายน้อยหรือไม่มีเลย</a>
       </li>
       <li onClick={() => handleActivitySelect("1-3 ครั้ง/สัปดาห์")}>
@@ -34,43 +48,56 @@ const Dropdown = ({ selectedActivity, toggleDropdown, isDropdownOpen, handleActi
         <a>ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</a>
       </li>
       <li onClick={() => handleActivitySelect("ออกกำลังกายเป็นประจำทุกวัน")}>
-        <a>ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์</a>
+        <a>
+          ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
+        </a>
       </li>
       <li onClick={() => handleActivitySelect("ออกกำลังกายแบบเข้มข้น")}>
         <a>ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์</a>
       </li>
-      <li onClick={() => handleActivitySelect("การออกกำลังกายที่เข้มข้นมากทุกวัน")}>
+      <li
+        onClick={() =>
+          handleActivitySelect("การออกกำลังกายที่เข้มข้นมากทุกวัน")
+        }
+      >
         <a>การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ</a>
       </li>
     </ul>
   </div>
 );
 
-const RegisterProfile = ({ isOpen, onClose, formData , username, email, password  }) => {
-  const directus = new Directus('http://localhost:8055/');
+const RegisterProfile = ({
+  isOpen,
+  onClose,
+  formData,
+  username,
+  email,
+  password,
+}) => {
+  const directus = new Directus("http://localhost:8055/");
   const router = useRouter();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState("กรุณาเลือกความถี่");
   const [formDataModal, setFormDataModal] = useState({
-    age: formData.age || '',
-    gender: formData.gender || '',
-    height: formData.height || '',
-    weight: formData.weight || '',
-    frequency: '',
+    age: formData.age || "",
+    gender: formData.gender || "null",
+    height: formData.height || "",
+    weight: formData.weight || "",
+    frequency: "",
   });
 
   const handleActivitySelect = (activity) => {
     const frequencyMapping = {
-      "ออกกำลังกายน้อย": 1,
+      ออกกำลังกายน้อย: 1,
       "1-3 ครั้ง/สัปดาห์": 2,
       "4-5 ครั้ง/สัปดาห์": 3,
-      "ออกกำลังกายเป็นประจำทุกวัน": 4,
-      "ออกกำลังกายแบบเข้มข้น": 5,
-      "การออกกำลังกายที่เข้มข้นมากทุกวัน": 6,
+      ออกกำลังกายเป็นประจำทุกวัน: 4,
+      ออกกำลังกายแบบเข้มข้น: 5,
+      การออกกำลังกายที่เข้มข้นมากทุกวัน: 6,
     };
-  
+
     const frequencyValue = frequencyMapping[activity];
-  
+
     setSelectedActivity(activity);
     setFormDataModal((prevData) => ({
       ...prevData,
@@ -78,7 +105,6 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
     }));
     setDropdownOpen(false);
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,7 +113,6 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
       [name]: value,
     }));
   };
-  
 
   const closeModal = () => {
     onClose(); // Use the provided onClose callback to close the modal
@@ -99,141 +124,156 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Perform actions with the collected data as needed
     console.log("Form Data:", formDataModal);
-  
+
     try {
-        const response = await directus.items('user').createOne({
-            email: email,
-            username: username,
-            password: password,
-            age: formDataModal.age,
-            gender: formDataModal.gender,
-            height: formDataModal.height,
-            weight: formDataModal.weight,
-            frequency: formDataModal.frequency,
-          });
-      
-          console.log('User registered successfully:', response);
-      
-          alert('Registration successful!');
-          router.push('/login');
-        } catch (error) {
-          console.error('Error registering user:', error);
-        }
-      onClose(); 
+      const response = await directus.items("user").createOne({
+        email: email,
+        username: username,
+        password: password,
+        age: formDataModal.age,
+        gender: formDataModal.gender,
+        height: formDataModal.height,
+        weight: formDataModal.weight,
+        frequency: formDataModal.frequency,
+      });
+
+      console.log("User registered successfully:", response);
+
+      alert("Registration successful!");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+    onClose();
   };
-  
-  
 
   return (
     <>
-        {isOpen && (
+      {isOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-start justify-center mt-10">
-          <div className="bg-white p-8 rounded-md shadow-md w-4/12">
-            <div className="flex items-center justify-between mb-6">
-              <div className="text-green-700 text-lg font-semibold font-inter ml-20">
+          <div className="card bg-white rounded-[80px] shadow-md">
+            <div className=" card-body mb-6 w-[1000px] h-auto inline-flex  ">
+              <div className="card-title text-green-700 text-2xl font-semibold font-inter justify-center mt-6">
                 กรอกรายละเอียดเพื่อคำนวณแคลอรี่ของคุณ
               </div>
-              <div
-                className="text-blue-500 text-lg font-normal font-inter cursor-pointer mr-7"
-                onClick={closeModal}
-              >
+              <div className=" absolute  end-20 text-xl" onClick={closeModal}>
                 ข้าม
               </div>
-            </div>
 
-            <div className="inline-flex items-start justify-center mb-4">
-              <div>
-                <label htmlFor="age" className="text-green-700 text-lg py-2">อายุ</label>
-              </div>
-              <div className="inline-flex ml-4">
-                <input
-                  type="text"
-                  id="age"
-                  name="age"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  className="ml-16 bg-gray-100 text-green-700 text-center rounded-md py-2 px-4 focus:outline-none focus:ring focus:border-blue-300"
-                  placeholder="กรุณากรอกอายุ"
-                />
-                <p className="ml-7 text-green-700 text-lg py-2">อายุ 15-80</p>
-              </div>
-            </div>
-
-            <div className="inline-flex items-start justify-center mb-4">
-              <div>
-                <label className="text-green-700 text-lg py-2">เพศ</label>
-              </div>
-              <div className="inline-flex justify-between ml-20 text-xl  text-[#587F61] text-center">
-                <RadioInput id="male" name="gender" value="male" label="ชาย" onChange={handleInputChange} />
-                <div className="ml-20"></div>
-                <RadioInput id="female" name="gender" value="female" label="หญิง" onChange={handleInputChange} />
-              </div>
-            </div>
-
-            <div className="inline-flex items-start justify-center mb-4">
-              <div>
-                <label htmlFor="height" className="text-green-700 text-lg py-2">ความสูง</label>
-              </div>
-              <div className="inline-flex ml-4">
-                <input
-                  type="text"
-                  id="height"
-                  name="height"
-                  value={formData.height}
-                  onChange={handleInputChange}
-                  className="ml-9 bg-gray-100 text-green-700 text-center rounded-md py-2 px-4 focus:outline-none focus:ring focus:border-blue-300"
-                  placeholder="กรุณากรอกความสูง"
-                />
-              </div>
-            </div>
-
-            <div className="inline-flex items-start justify-center mb-4">
-              <div>
-                <label htmlFor="weight" className="text-green-700 text-lg py-2">น้ำหนัก</label>
-              </div>
-              <div className="inline-flex ml-4">
-                <input
-                  type="text"
-                  id="weight"
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleInputChange}
-                  className="ml-10 bg-gray-100 text-green-700 text-center rounded-md py-2 px-4 focus:outline-none focus:ring focus:border-blue-300"
-                  placeholder="กรุณากรอกน้ำหนัก"
-                />
-              </div>
-            </div>
-
-            <div className="inline-flex mx-auto">
-              <div className="inline-flex justify-center">
-                <div className="text-center">
-                  <label className="text-green-700 text-lg">ความถี่</label>
+              <div className="inline-flex item-center justify-between  mx-24 mt-5">
+                <div>
+                  <label htmlFor="age" className="text-xl font-semibold  text-[#587F61]">
+                    อายุ
+                  </label>
                 </div>
-                <div className="ml-8 text-center">
-                <Dropdown
-                    selectedActivity={selectedActivity}
-                    toggleDropdown={toggleDropdown}
-                    isDropdownOpen={isDropdownOpen}
-                    handleActivitySelect={handleActivitySelect}
-                />
+                <div className="">
+                  <input
+                    type="text"
+                    id="age"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
+                    placeholder="กรุณากรอกอายุ"
+                  />
+                  <div className="inline-flex text-[#587F61]">อายุ 15-80</div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex w-11/12 justify-center items-center mx-auto mt-6">
-            <button
-                onClick={handleProfileSubmit}
-                className="bg-green-700 py-2 px-6 text-md font-semibold text-white rounded-md shadow-sm hover:bg-[#4a6b52] focus:outline-none focus:ring focus:border-blue-300"
-                >
-                บันทึก
+              <div className="flex justify-start mx-24 mt-5">
+                <div>
+                  <label className="text-xl font-semibold text-[#587F61]">เพศ</label>
+                </div>
+                <div className="flex mx-24 text-xl  text-[#587F61] text-center">
+                  <RadioInput
+                    id="male"
+                    name="gender"
+                    value="male"
+                    label="ชาย"
+                    onChange={handleInputChange}
+                  />
+                  <div className="flex mx-24">
+                  <RadioInput
+                    id="female"
+                    name="gender"
+                    value="female"
+                    label="หญิง"
+                    className="ml-5"
+                    onChange={handleInputChange}
+                  />
+                  </div>
+                </div>
+              </div>
+
+              <div className="inline-flex mx-24 justify-between mr-[173px] mt-5">
+                <div>
+                  <label
+                    htmlFor="height"
+                    className="text-xl font-semibold text-[#587F61]"
+                  >
+                    ความสูง
+                  </label>
+                </div>
+                <div className="">
+                  <input
+                    type="text"
+                    id="height"
+                    name="height"
+                    value={formData.height}
+                    onChange={handleInputChange}
+                    className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
+                    placeholder="กรุณากรอกความสูง"
+                  />
+                </div>
+              </div>
+
+              <div className="inline-flex mx-24 mt-5">
+                <div>
+                  <label htmlFor="weight" className="text-xl font-semibold text-[#587F61]">
+                    น้ำหนัก
+                  </label>
+                </div>
+                <div className=" ml-[58px] ">
+                  <input
+                    type="text"
+                    id="weight"
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                    className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
+                    placeholder="กรุณากรอกน้ำหนัก"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <div className="inline-flex mx-24 justify-center">
+                  <div className="text-center">
+                    <label className="text-xl font-semibold text-[#587F61]">ความถี่</label>
+                  </div>
+                  <div className="w-[485px] ml-9 text-center">
+                    <Dropdown
+                      selectedActivity={selectedActivity}
+                      toggleDropdown={toggleDropdown}
+                      isDropdownOpen={isDropdownOpen}
+                      handleActivitySelect={handleActivitySelect}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-action flex justify-center items-center mt-6">
+                <button onClick={handleProfileSubmit} className=" bg-green-700 py-2 px-6 text-md font-semibold text-white rounded-md shadow-sm hover:bg-[#4a6b52] focus:outline-none focus:ring focus:border-blue-300">
+                  บันทึก
                 </button>
+              </div>
             </div>
           </div>
         </div>
-        )}
+      )}
     </>
   );
 };
