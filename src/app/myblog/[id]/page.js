@@ -178,11 +178,19 @@ const myBlogs = ({ params }) => {
           minHeight: "200px",
         }}
       >
-        <div className="absolute left-0 ml-5 mt-[400px]">
-          <div className="font-bold text-2xl text-black">
-            {user[0]?.username}
+        <div className="absolute left-0 mx-10 mt-[400px]">
+          <div className="flex items-center">
+            <div className="bg-[#EEF2EF] px-4 py-1 rounded-2xl">
+              <div className="font-bold text-2xl text-black">
+                {user[0]?.username}
+              </div>
+            </div>
           </div>
-          <div className="mt-5 text-black">{blogs[0]?.description}</div>
+          <div className="flex items-center  ">
+            <div className="bg-[#EEF2EF] px-3 py-2 rounded-2xl mt-5 text-balance overflow-auto h-28 w-[400px] ">
+              <div className=" text-black">{blogs[0]?.description}</div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex  mt-5 item-center justify-end mr-[410px]">

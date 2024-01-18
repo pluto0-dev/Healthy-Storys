@@ -13,6 +13,10 @@ const CreateContent = ({ params }) => {
     videoClipName: "",
     details: "",
   });
+  const [isHavefile, setIsHavefile] = useState(false);
+  const [isHaveImage, setIsHaveimage] = useState(false);
+  const [imageFilePreviews, setImageFilePreviews] = useState([]);
+  const [videoFilePreviews, setVideoFilePreviews] = useState([]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -23,11 +27,18 @@ const CreateContent = ({ params }) => {
         limit: 1,
       });
 
-      const response = await directus.items("content").createOne({
+      const response = await directus.files.createOne({
+        
+      });
+
+      const contentData = {
         blog: userBlog.data[0].id,
         title: formData.videoClipName,
         description: formData.details,
-      });
+        file: response.data.id, // Use the file ID obtained from Directus
+      };
+
+      await directus.items("content").createOne(contentData);
 
       console.log("Content created successfully:", response);
 
@@ -43,15 +54,49 @@ const CreateContent = ({ params }) => {
   };
 
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const handleImageChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === "preview" && files.length > 0) {
+      const file = files[0];
+      const fileType = file.type.split("/")[0];
+
+      if (fileType === "image") {
+        // Set the selected file name in the state for preview
+        //setFormData((prevData) => ({ ...prevData, bannerName: file.name }));
+        setIsHaveimage(true);
+        setImageFilePreviews([{ type: fileType, file }]);
+      } else {
+        alert("ไม่สามารถใช้วิดีโอ เป็นภาพตัวอย่างได้")
+      }
+    } else {
+      setIsHavefile(false);
+      //setIsHaveimage((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+
+  const handleVideoChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "video" && files.length > 0) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
+      const file = files[0];
+      const fileType = file.type.split("/")[0];
+
+      if (fileType === "video") {
+        // Set the selected file name in the state for preview
+        //setFormData((prevData) => ({ ...prevData, bannerName: file.name }));
+        setIsHavefile(true);
+
+        setVideoFilePreviews([{ type: fileType, file }]);
+      } else {
+        alert("ไม่สามารถใช้รูปได้")
+      }
     } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
+      setIsHavefile(false);
+      //setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
 
@@ -65,52 +110,97 @@ const CreateContent = ({ params }) => {
 
       <div className="mt-2">
         <div className="inline-flex items-center mx-[260px]">
-        <div className="items-center justify-center mx-5">
-          <label
-            htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              
-              <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                <span className="font-semibold">เพิ่มรูปภาพ</span>
-              </p>
-              <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                <span className="font-semibold">หรือลากและวาง</span>
-              </p>
-            </div>
-            <input
-              id="dropzone-file"
-              name="preview"
-              type="file"
-              className="hidden"
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
-        <div className="items-center justify-center w-full">
-          <label
-            htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              
-              <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                <span className="font-semibold">เพิ่มวิดีโอ</span>
-              </p>
-              <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                <span className="font-semibold">หรือลากและวาง</span>
-              </p>
-            </div>
-            <input
-              id="dropzone-file"
-              name="video"
-              type="file"
-              className="hidden"
-              onChange={handleInputChange}
-            />
-          </label>
-        </div>
+          <div className="items-center justify-center mx-5">
+            <label
+              htmlFor="dropzone-image"
+              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                {isHaveImage ? (
+                  <>
+                    {imageFilePreviews.map((preview, index) => (
+                      <div
+                        key={index}
+                        className="w-full h-full object-contain bg-black"
+                      >
+                        {preview.type === "image" && (
+                          <img
+                            src={URL.createObjectURL(preview.file)}
+                            alt={`Image Preview ${index + 1}`}
+                          />
+                        )}
+                        {preview.type === "video" && (
+                          <video
+                            src={URL.createObjectURL(preview.file)}
+                            controls
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <p className=" mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
+                      <span className="font-semibold">เพิ่มรูปภาพ</span>
+                    </p>
+                    <p className="text-center text-neutral-500 text-xl font-normal">
+                      <span className="font-semibold">หรือลากและวาง</span>
+                    </p>
+                  </>
+                )}
+              </div>
+              <input
+                id="dropzone-image"
+                name="preview"
+                type="file"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
+          
+          <div className="items-center justify-center w-full">
+            <label
+              htmlFor="dropzone-video"
+              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                {isHavefile ? (
+                  <>
+                    {videoFilePreviews.map((preview, index) => (
+                      <div
+                        key={index}
+                        className="w-full h-full object-contain bg-black"
+                      >
+                        {preview.type === "video" && (
+                          <video
+                            src={URL.createObjectURL(preview.file)}
+                            controls
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <p className=" mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
+                      <span className="font-semibold">เพิ่มวิดีโอ</span>
+                    </p>
+                    <p className="text-center text-neutral-500 text-xl font-normal">
+                      <span className="font-semibold">หรือลากและวาง</span>
+                    </p>
+                  </>
+                )}
+              </div>
+              <input
+                id="dropzone-video"
+                name="video"
+                type="file"
+                className="hidden"
+                onChange={handleVideoChange}
+              />
+            </label>
+          </div>
         </div>
         <div className="input-box flex justify-center mt-5">
           <div className="text-black text-2xl font-bold my-auto mr-[120px]">

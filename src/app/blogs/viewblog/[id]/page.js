@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Link from "next/link";
-const Blogs = ({params}) => {
+const Blogs = ({ params }) => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
   const [user, setUser] = useState({});
@@ -13,11 +13,10 @@ const Blogs = ({params}) => {
     const fetchUser = async () => {
       try {
         const userResponse = await directus.items("user").readByQuery({
-          filter: { id},
+          filter: { id: params.id },
           limit: 1,
         });
         setUser(userResponse.data);
-        //console.log(userResponse.data)
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -34,7 +33,7 @@ const Blogs = ({params}) => {
           limit: 1,
         });
         setBlogs(blogResponse.data);
-       //console.log(blogResponse.data)
+        //console.log(blogResponse.data)
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
@@ -46,9 +45,9 @@ const Blogs = ({params}) => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const blogIds = blogs.map(blog => blog.id);
+        const blogIds = blogs.map((blog) => blog.id);
         const contentResponse = await directus.items("content").readByQuery({
-          filter: { blog: { id: { _in: blogIds } }},
+          filter: { blog: { id: { _in: blogIds } } },
         });
         setContent(contentResponse.data);
         console.log(contentResponse.data);
@@ -59,8 +58,6 @@ const Blogs = ({params}) => {
 
     fetchContent();
   }, [blogs]);
-
-  
 
   return (
     <>
@@ -73,11 +70,19 @@ const Blogs = ({params}) => {
           minHeight: "200px",
         }}
       >
-        <div className="absolute left-0 ml-5 mt-[400px]">
-          <div className="font-bold text-2xl text-black">
-            {user[0]?.username}
+        <div className="absolute left-0 mx-10 mt-[400px]">
+          <div className="flex items-center">
+            <div className="bg-[#EEF2EF] px-4 py-1 rounded-2xl">
+              <div className="font-bold text-2xl text-black">
+                {user[0]?.username}
+              </div>
+            </div>
           </div>
-          <div className="mt-5 text-black">{blogs[0]?.description}</div>
+          <div className="flex items-center ">
+            <div className="bg-[#EEF2EF] px-3 py-2 rounded-2xl mt-5 text-balance overflow-auto h-28 w-[400px]">
+              <div className=" text-black">{blogs[0]?.description}</div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex items-end justify-end">
@@ -100,7 +105,7 @@ const Blogs = ({params}) => {
                 <h2 className="card-title font-bold text-xl text-black">
                   {content.title}
                 </h2>
-                <p className="card-description text-black">
+                <p className="card-description text-black ">
                   {content.description}
                 </p>
               </div>

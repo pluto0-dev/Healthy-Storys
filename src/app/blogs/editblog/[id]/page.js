@@ -7,7 +7,6 @@ const editblog = ({ params }) => {
   const directus = new Directus("http://localhost:8055/");
   const [filePreviews, setFilePreviews] = useState([]);
   const [isHavefile, setIsHavefile] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [formData, setFormData] = useState({
     description: "",
   });
