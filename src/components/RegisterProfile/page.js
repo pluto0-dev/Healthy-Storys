@@ -15,7 +15,7 @@ const Dropdown = ({ selectedActivity, toggleDropdown, isDropdownOpen, handleActi
     <div
       tabIndex={0}
       role="button"
-      className="btn m-1 bg-[#cbd7ce] overflow-hidden flex items-center"
+      className="btn m-1 bg-[#cbd7ce] w-full ml-[20px] border-none text-[#587F61]  hover:bg-[#bcc7bf]"
       onClick={toggleDropdown}
     >
       {selectedActivity}
@@ -130,7 +130,7 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
   return (
     <>
         {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed top-0 left-0 w-full h-full flex items-start justify-center mt-10">
           <div className="bg-white p-8 rounded-md shadow-md w-4/12">
             <div className="flex items-center justify-between mb-6">
               <div className="text-green-700 text-lg font-semibold font-inter ml-20">
@@ -166,7 +166,7 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
               <div>
                 <label className="text-green-700 text-lg py-2">เพศ</label>
               </div>
-              <div className="inline-flex flex justify-between ml-20 text-xl  text-[#587F61] text-center">
+              <div className="inline-flex justify-between ml-20 text-xl  text-[#587F61] text-center">
                 <RadioInput id="male" name="gender" value="male" label="ชาย" onChange={handleInputChange} />
                 <div className="ml-20"></div>
                 <RadioInput id="female" name="gender" value="female" label="หญิง" onChange={handleInputChange} />
@@ -208,7 +208,7 @@ const RegisterProfile = ({ isOpen, onClose, formData , username, email, password
             </div>
 
             <div className="inline-flex mx-auto">
-              <div className="inline-flex flex justify-center">
+              <div className="inline-flex justify-center">
                 <div className="text-center">
                   <label className="text-green-700 text-lg">ความถี่</label>
                 </div>

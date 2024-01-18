@@ -81,7 +81,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start h-screen mt-28 bg-[#cbd7ce]">
+    <div className="flex flex-col items-center justify-start h-screen mt-28 drop-shadow-md">
       {isRegisterProfile ? (
         <RegisterProfile
           isOpen={openRegisterProfile}

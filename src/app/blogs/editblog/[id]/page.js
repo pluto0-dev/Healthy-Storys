@@ -5,7 +5,9 @@ import Cookies from "js-cookie";
 
 const editblog = ({ params }) => {
   const directus = new Directus("http://localhost:8055/");
-
+  const [filePreviews, setFilePreviews] = useState([]);
+  const [isHavefile, setIsHavefile] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [formData, setFormData] = useState({
     description: "",
   });
@@ -14,7 +16,7 @@ const editblog = ({ params }) => {
     const fetchContent = async () => {
       try {
         const contentResponse = await directus.items("blog").readByQuery({
-          filter:  {id:  params.id} ,
+          filter: { id: params.id },
           limit: 1,
         });
 
@@ -35,29 +37,30 @@ const editblog = ({ params }) => {
 
     try {
       // Update the blog post data on the server
-        await directus.items('blog').updateOne(params.id,
-        { description: formData.description }
-      );
+      await directus
+        .items("blog")
+        .updateOne(params.id, { description: formData.description });
 
-      alert('Blog post updated successfully!');
-      
+      alert("Blog post updated successfully!");
     } catch (error) {
-      console.error('Error updating blog post:', error);
+      console.error("Error updating blog post:", error);
     }
   };
   const handleInputChange = (e) => {
-    if (e.target.name === "file") {
-      const fileName = e.target.files[0].name;
-      setFormData({
-        ...formData,
-        bannerName: fileName,
-      });
+    const { name, value, files } = e.target;
+  
+    if (name === "video" && files.length > 0) {
+      // ... (unchanged logic for video)
+    } else if (name === "banner" && files.length > 0) {
+      const imageFile = files[0];
+  
+      // Set the selected file name in the state
+      setFormData((prevData) => ({ ...prevData, bannerName: imageFile.name }));
+      setIsHavefile(true);
+      setFilePreviews([{ type: "image", file: imageFile }]);
     } else {
-      // Handle other input changes
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value,
-      });
+      setIsHavefile(false);
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
 
@@ -71,49 +74,46 @@ const editblog = ({ params }) => {
         </div>
 
         <div className="mt-2">
-          <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-4 text-neutral-500"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                  <span className="font-semibold">เพิ่มรูปภาพ</span>
-                </p>
-                <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                  <span className="font-semibold">หรือลากและวาง</span>
-                </p>
-              </div>
-              <input
-                id="dropzone-file"
-                name="file"
-                type="file"
-                className="hidden"
-                onChange={handleInputChange}
-              />
-              {formData.bannerName && (
-                <p className="text-black text-xl mt-2">
-                  File Selected: {formData.bannerName}
-                </p>
-              )}
-            </label>
-          </div>
-          
+        <div className="flex items-center justify-center w-full">
+  <label
+    htmlFor="dropzone-file"
+    className="relative flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 overflow-hidden"
+  >
+    <div className="absolute top-0 left-0 w-full h-full">
+      {isHavefile ? (
+        <>
+          {filePreviews.map((preview, index) => (
+            <img
+              key={index}
+              src={URL.createObjectURL(preview.file)}
+              alt={`Image Preview ${index + 1}`}
+              className="w-full h-full object-contain bg-black"
+            />
+          ))}
+        </>
+      ) : (
+        <>
+          <p className=" mt-56 mb-2 text-center text-neutral-500 text-5xl font-normal">
+            <span className="font-semibold">เพิ่มรูปภาพ</span>
+          </p>
+          <p className="text-center text-neutral-500 text-xl font-normal">
+            <span className="font-semibold">หรือลากและวาง</span>
+          </p>
+        </>
+      )}
+    </div>
+
+    <input
+      id="dropzone-file"
+      name="banner"
+      type="file"
+      className="hidden"
+      onChange={handleInputChange}
+    />
+  </label>
+</div>
+
+
           <div className="input-box flex justify-start mt-5 ml-[312px]">
             <div className="text-black text-2xl font-bold  mr-[125px] ">
               คำอธิบาย
