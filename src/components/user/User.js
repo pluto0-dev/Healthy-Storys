@@ -60,7 +60,7 @@ const User = () => {
           />
 
         </div>
-    <div className="grid grid-cols-3 gap-4 mt-4 overflow-y-auto">
+    <div className="grid grid-cols-3 gap-4 mt-4 overflow-x-scroll">
     {filteredUsers.map((currentUser) => (
         <Link key={currentUser.id} href={`/blogs/viewblog/${currentUser.id}`}>
           <div className="card w-[350px] h-[400px] bg-base-100 shadow-xl relative ">

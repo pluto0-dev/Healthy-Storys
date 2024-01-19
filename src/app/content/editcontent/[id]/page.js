@@ -226,16 +226,16 @@ const EditContent = ({ params }) => {
             <div className="items-center justify-center mr-5">
               <label
                 htmlFor="dropzone-image"
-                className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
+                className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde relative overflow-hidden"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   {imageFilePreviews.length > 0 ? (
                     <>
-                      <div className="w-full h-full  bg-cover bg-black bg-center">
+                      <div className="w-full h-full bg-cover bg-black bg-center">
                         <img
                           src={imageFilePreviews[0].file}
                           alt={`Image Preview`}
-                          className=""
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </>

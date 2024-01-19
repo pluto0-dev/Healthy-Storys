@@ -154,51 +154,48 @@ const CreateContent = ({ params }) => {
 
       <div className="mt-2">
         <div className="inline-flex items-center mx-[260px]">
-          <div className="items-center justify-center mx-5">
-            <label
-              htmlFor="dropzone-image"
-              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                {isHaveImage ? (
-                  <>
-                    {imageFilePreviews.map((preview, index) => (
-                      <div
-                        key={index}
-                        className="w-full h-full  bg-cover bg-black bg-center"
-                      >
-                        {preview.type === "image" && (
-                          <img
-                            src={URL.createObjectURL(preview.file)}
-                            alt={`Image Preview ${index + 1}`}
-                            className=""
-                          />
-                        )}
-                       
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    <p className=" mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
-                      <span className="font-semibold">เพิ่มรูปภาพ</span>
-                    </p>
-                    <p className="text-center text-neutral-500 text-xl font-normal">
-                      <span className="font-semibold">หรือลากและวาง</span>
-                    </p>
-                  </>
-                )}
-              </div>
-              <input
-                id="dropzone-image"
-                name="preview"
-                type="file"
-                className="hidden"
-                onChange={handleImageChange}
-              />
-            </label>
-          </div>
+
           
+        <div className="items-center justify-center mx-5">
+  <label
+    htmlFor="dropzone-image"
+    className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde relative overflow-hidden"
+  >
+    <div className="w-full h-full bg-cover bg-center mt-32">
+      {isHaveImage ? (
+        <>
+          {imageFilePreviews.map((preview, index) => (
+            <img
+              key={index}
+              src={URL.createObjectURL(preview.file)}
+              alt={`Image Preview ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          ))}
+        </>
+      ) : (
+        <>
+          <p className="mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
+            <span className="font-semibold">เพิ่มรูปภาพ</span>
+          </p>
+          <p className="text-center text-neutral-500 text-xl font-normal">
+            <span className="font-semibold">หรือลากและวาง</span>
+          </p>
+        </>
+      )}
+    </div>
+    <input
+      id="dropzone-image"
+      name="preview"
+      type="file"
+      className="hidden"
+      onChange={handleImageChange}
+    />
+  </label>
+</div>
+          
+
+
           <div className="items-center justify-center w-full">
             <label
               htmlFor="dropzone-video"
