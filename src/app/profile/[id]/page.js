@@ -7,16 +7,6 @@ const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
 
-  const [user, setUser] = useState({
-    image_profile: "",
-    username: "",
-    age: 0,
-    gender: "",
-    height: 0,
-    weight: 0,
-    frequency: "",
-  });
-
   useEffect(() => {
     const fetchUser = async () => {
       const userId = Cookies.get("token");
@@ -30,29 +20,94 @@ const Profile = () => {
     fetchUser();
   }, []);
 
+  const [user, setUser] = useState({
+    profile: "",
+    username: "",
+    age: 0,
+    gender: "",
+    height: 0,
+    weight: 0,
+    frequency: "",
+  });
+
+
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-
+  
     if (type === "radio") {
-      setUser((prevUser) => ({ ...prevUser, [name]: formData }));
-    } else {
       setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    } else {
+      setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
     }
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = Cookies.get("token");
     try {
-      const updateUserData = await directus
-        .items("user")
-        .updateOne(userId, user);
-      setUser(updateUserData);
-      console.log("User data updated successfully:", updateUserData);
+      console.log('file upload on submit', fileId);
+  
+      const updatedUserData = {
+        ...user,
+        profile: fileId,
+      };
+  
+      const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
+      setUser(updatedUser);
+  
+      console.log('User profile updated successfully:', updatedUser);
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error('Error updating user profile:', error.message);
     }
   };
+  
+  const [filePreviews, setFilePreviews] = useState([]);
+  const [isHavefile, setIsHavefile] = useState(false);
+
+  const handlefileChange = async (e) => {
+    const { name, files, type } = e.target;
+  
+    if (name === "profile" && files.length > 0) {
+      const imageFile = files[0];
+      setUser((prevData) => ({ ...prevData, profile: imageFile.name }));
+      setIsHavefile(true);
+      setFilePreviews([{ type: "image", file: imageFile }]);
+      const fileUploadResponse = await uploadImage(imageFile);
+      console.log('file upload', fileUploadResponse);
+    } else {
+      setIsHavefile(false);
+      setUser((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+  
+  const appId = Cookies.get("token");
+
+  const [fileId, setFileId] = useState();
+  
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append('file', blob, file.name);
+      formData.append('appId', appId);
+      formData.append('storage', 'local');
+  
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+  
+      console.log('File upload response:', fileUploadResponse);
+
+      setFileId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      throw error;
+    }
+  };
+  
 
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-[url('/bg3.png')] bg-center bg-cover">
@@ -61,12 +116,14 @@ const Profile = () => {
       </div>
       <div className="flex items-center justify-center ml-6 mb-6">
         <div className="avatar mr-4">
-          <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            {user && user.image_profile ? (
+        <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            {isHavefile && filePreviews.length > 0 && filePreviews[0].type === "image" ? (
               <img
-                src={`${assetsUrl}/${user.image_profile}`}
-                alt="User Avatar"
+                src={URL.createObjectURL(filePreviews[0].file)}
+                alt="User Avatar Preview"
               />
+            ) : user && user.profile ? (
+              <img src={`${assetsUrl}/${user.profile}`} alt="User Avatar" />
             ) : (
               <img src="/profile.png" alt="Default Avatar" />
             )}
@@ -86,8 +143,8 @@ const Profile = () => {
               id="dropzone-file"
               type="file"
               className="hidden"
-              name="image_profile"
-              onChange={handleInputChange}
+              name="profile"
+              onChange={(e) => handlefileChange(e)}
             />
           </label>
         </div>
@@ -181,14 +238,16 @@ const Profile = () => {
                 <option value="">Select Activity</option>
                 <option value="1">ออกกำลังกายน้อยหรือไม่มีเลย</option>
                 <option value="2">ออกกำลังกาย 1-3 ครั้ง/สัปดาห์</option>
-                <option value="3">ออกกำลังกาย 3-5 ครั้ง/สัปดาห์</option>
+                <option value="3">ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</option>
                 <option value="4">
-                อกกำลังกาย 6-7 ครั้ง/สัปดาห์
+                ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
                 </option>
                 <option value="5">
-                ออกกำลังกายเช้าเย็นทุกวัน
+                ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์
                 </option>
-
+                <option value="6">
+                การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ
+                </option>
               </select>
             </div>
 
@@ -205,3 +264,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
