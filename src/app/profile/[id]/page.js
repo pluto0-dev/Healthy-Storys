@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
-  const [formData, setFormData] = useState("");
+
   const [user, setUser] = useState({
     image_profile: "",
     username: "",
@@ -30,23 +30,18 @@ const Profile = () => {
     fetchUser();
   }, []);
 
+
+
+
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
   
     if (type === "radio") {
-      setFormData(value); 
-      setUser((prevUser) => ({ ...prevUser, [name]: value }));
+      setUser((prevUser) => ({ ...prevUser, [name]: formData }));
     } else {
-      // Validate "age" to allow only integer values
-      if (name === "age" && value !== "" && !/^\d+$/.test(value)) {
-        // Display an error or handle it as needed
-        console.error("Age must be a valid integer.");
-        return;
-      }
-  
-      setUser((prevUser) => ({ ...prevUser, [name]: value }));
+      setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
     }
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,12 +51,13 @@ const Profile = () => {
         .items("user")
         .updateOne(userId, user);
       setUser(updateUserData);
-      //console.log("User data updated successfully:", updateUserData);
-      alert("User data updated successfully")
+      console.log("User data updated successfully:", updateUserData);
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error('Error uploading image:', error.message);
+      throw error;
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-[url('/bg3.png')] bg-center bg-cover">
@@ -70,12 +66,14 @@ const Profile = () => {
       </div>
       <div className="flex items-center justify-center ml-6 mb-6">
         <div className="avatar mr-4">
-          <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            {user && user.image_profile ? (
+        <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            {isHavefile && filePreviews.length > 0 && filePreviews[0].type === "image" ? (
               <img
-                src={`${assetsUrl}/${user.image_profile}`}
-                alt="User Avatar"
+                src={URL.createObjectURL(filePreviews[0].file)}
+                alt="User Avatar Preview"
               />
+            ) : user && user.profile ? (
+              <img src={`${assetsUrl}/${user.profile}`} alt="User Avatar" />
             ) : (
               <img src="/profile.png" alt="Default Avatar" />
             )}
@@ -95,8 +93,8 @@ const Profile = () => {
               id="dropzone-file"
               type="file"
               className="hidden"
-              name="image_profile"
-              onChange={handleInputChange}
+              name="profile"
+              onChange={(e) => handlefileChange(e)}
             />
           </label>
         </div>
@@ -190,14 +188,16 @@ const Profile = () => {
                 <option value="">Select Activity</option>
                 <option value="1">ออกกำลังกายน้อยหรือไม่มีเลย</option>
                 <option value="2">ออกกำลังกาย 1-3 ครั้ง/สัปดาห์</option>
-                <option value="3">ออกกำลังกาย 3-5 ครั้ง/สัปดาห์</option>
+                <option value="3">ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</option>
                 <option value="4">
-                อกกำลังกาย 6-7 ครั้ง/สัปดาห์
+                ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
                 </option>
                 <option value="5">
-                ออกกำลังกายเช้าเย็นทุกวัน
+                ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์
                 </option>
-
+                <option value="6">
+                การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ
+                </option>
               </select>
             </div>
 
@@ -214,3 +214,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
