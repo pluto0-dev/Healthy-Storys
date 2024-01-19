@@ -5,6 +5,7 @@ import { Directus } from "@directus/sdk";
 
 const Contents = (params) => {
   const directus = new Directus("http://localhost:8055");
+  const assetsUrl = "http://localhost:8055/assets";
   const [content, setContent] = useState([]);
   useEffect(() => {
     const fetchContent = async () => {
@@ -29,7 +30,7 @@ const Contents = (params) => {
         >
           <figure>
             <img
-              src={"https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"}
+              src={`${assetsUrl}/${content.preview}`}
               alt="imgvideo"
             />
           </figure>

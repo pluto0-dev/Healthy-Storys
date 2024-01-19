@@ -60,10 +60,10 @@ const User = () => {
           />
 
         </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+    <div className="grid grid-cols-3 gap-4 mt-4 overflow-y-auto">
     {filteredUsers.map((currentUser) => (
         <Link key={currentUser.id} href={`/blogs/viewblog/${currentUser.id}`}>
-          <div className="card w-[350px] h-[400px] bg-base-100 shadow-xl relative">
+          <div className="card w-[350px] h-[400px] bg-base-100 shadow-xl relative ">
             <div
               className="card-body"
               style={{

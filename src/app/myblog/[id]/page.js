@@ -85,7 +85,7 @@
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import Link from "next/link";
-import { MoreHorizontal,AlertCircle,Trash2 } from "react-feather";
+import { MoreHorizontal, AlertCircle, Trash2 } from "react-feather";
 import Cookies from "js-cookie";
 
 const myBlogs = ({ params }) => {
@@ -213,13 +213,12 @@ const myBlogs = ({ params }) => {
             <div key={content.id} className="relative">
               <Link
                 href={`http://localhost:3000/content/viewcontent/${content.id}`}
-                className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
+                className="card card-side w-[860px] h-[350px] bg-white shadow-xl  "
               >
                 <figure>
                   <img
-                    src={
-                      "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
-                    }
+                    src={`${assetsUrl}/${content.preview}`}
+                    className="bg-cover h-full w-96 mb-2"
                     alt="imgvideo"
                   />
                 </figure>
@@ -254,10 +253,15 @@ const myBlogs = ({ params }) => {
               {isConfirmationOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
                   <div className="bg-white p-8 rounded-md ">
-                    <div className="text-xl font-bold mb-4 text-black inline-flex items-center"><AlertCircle className="mx-2 text-red-600 font-bold"/> ลบคอนเทนต์</div>
-                    <p className="mb- text-neutral-600">คุณต้องการลบข้อมูลนี้หรือไม่? หากถูกลบออกไป ข้อมูลดังกล่าวจะไม่สามารถกู้คืนได้</p>
+                    <div className="text-xl font-bold mb-4 text-black inline-flex items-center">
+                      <AlertCircle className="mx-2 text-red-600 font-bold" />{" "}
+                      ลบคอนเทนต์
+                    </div>
+                    <p className="mb- text-neutral-600">
+                      คุณต้องการลบข้อมูลนี้หรือไม่? หากถูกลบออกไป
+                      ข้อมูลดังกล่าวจะไม่สามารถกู้คืนได้
+                    </p>
                     <div className="flex justify-end  mt-6">
-                      
                       <button
                         onClick={closeConfirmation}
                         className="text-neutral-500 px-4 py-2 rounded-md mx-2 border-2"
@@ -268,8 +272,10 @@ const myBlogs = ({ params }) => {
                         onClick={handleDelete}
                         className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
                       >
-                        <div className=" inline-flex items-center justify-center  mt-2"><Trash2 className="mx-1"/>
-                        ยืนยันการลบข้อมูล</div>
+                        <div className=" inline-flex items-center justify-center  mt-2">
+                          <Trash2 className="mx-1" />
+                          ยืนยันการลบข้อมูล
+                        </div>
                       </button>
                     </div>
                   </div>

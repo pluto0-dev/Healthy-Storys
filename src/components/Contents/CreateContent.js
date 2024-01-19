@@ -60,7 +60,7 @@ const CreateContent = ({ params }) => {
     if (name === "preview" && files.length > 0) {
       const imageFile = files[0];
       setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
-      setIsHavefile(true);
+      setIsHaveimage(true);
       setImageFilePreviews([{ type: "image", file: imageFile }]);
       const fileUploadResponse = await uploadImage(imageFile);
       console.log('file upload', fileUploadResponse);
@@ -157,7 +157,7 @@ const CreateContent = ({ params }) => {
           <div className="items-center justify-center mx-5">
             <label
               htmlFor="dropzone-image"
-              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
+              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 {isHaveImage ? (
@@ -165,20 +165,16 @@ const CreateContent = ({ params }) => {
                     {imageFilePreviews.map((preview, index) => (
                       <div
                         key={index}
-                        className="w-full h-full object-contain bg-black"
+                        className="w-full h-full  bg-cover bg-black bg-center"
                       >
                         {preview.type === "image" && (
                           <img
                             src={URL.createObjectURL(preview.file)}
                             alt={`Image Preview ${index + 1}`}
+                            className=""
                           />
                         )}
-                        {preview.type === "video" && (
-                          <video
-                            src={URL.createObjectURL(preview.file)}
-                            controls
-                          />
-                        )}
+                       
                       </div>
                     ))}
                   </>

@@ -8,45 +8,23 @@ import Cookies from "js-cookie";
 const directus = new Directus("http://localhost:8055/");
 
 const CreateBlog = () => {
+  const authToken = Cookies.get("token")
   const router = useRouter();
+  const [isHavefile, setIsHavefile] = useState(false);
+  const [imageFilePreviews, setImageFilePreviews] = useState([]);
   const [formData, setFormData] = useState({
     description: "",
-    banner: "",
-    bannerName: "",
+
   });
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      banner: formData.file,
-      bannerName: file.name,
-    });
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!Cookies.get("token")) {
-      console.error("User ID is missing or invalid.");
-      // Display a message on the UI or redirect to login
-      return;
-    }
-
-  
     try {
       // Now create the blog entry with the file ID
       const blogResponse = await directus.items("blog").createOne({
         user: {
           id: Cookies.get("token"),
         },
-        banner: formData.file,
+        banner: imageId,
         description: formData.description,
       });
   
@@ -60,6 +38,53 @@ const CreateBlog = () => {
       console.error("Error sending data to Directus:", error);
     }
   };
+  const handleInputChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    setFormData((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
+  };  
+
+  const handleImageChange = async (e) => {
+    const { name, files, type } = e.target;
+  
+    if (name === "banner" && files.length > 0) {
+      const imageFile = files[0];
+      setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
+     // setIsHaveimage(true);
+      setImageFilePreviews([{ type: "image", file: imageFile }]);
+      const fileUploadResponse = await uploadImage(imageFile);
+      console.log('file upload', fileUploadResponse);
+    } else {
+      setIsHavefile(false);
+      //setFormData((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+  const [imageId, setImageId] = useState();
+  const appId = authToken
+
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append("file", blob, file.name);
+      formData.append("appId", appId);
+      formData.append("storage", "local");
+
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      console.log("File upload response:", fileUploadResponse);
+
+      setImageId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+    } catch (error) {
+      console.error("Error uploading image:", error.message);
+      throw error;
+    }
+  };
+  
 
   return (
     <>
@@ -73,7 +98,7 @@ const CreateBlog = () => {
         <div className="mt-2">
           <div className="flex items-center justify-center w-full">
             <label
-              htmlFor="dropzone-file"
+              htmlFor="dropzone-image"
               className="flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -86,17 +111,13 @@ const CreateBlog = () => {
                 </p>
               </div>
               <input
-                id="dropzone-file"
+                id="dropzone-image"
                 name="banner"
                 type="file"
                 className="hidden"
-                onChange={handleFileChange}
+                onChange={handleImageChange}
               />
-              {formData.bannerName && (
-                <p className="text-black text-xl mt-2">
-                  File Selected: {formData.bannerName}
-                </p>
-              )}
+              
             </label>
           </div>
           <div className="input-box flex justify-start mt-5 ml-[312px]">

@@ -86,20 +86,15 @@ const Blogs = ({ params }) => {
         </div>
       </div>
       <div className="flex items-end justify-end">
-        <div className="grid grid-cols-1 gap-4 mt-8 mx-auto">
+        <div className="grid grid-cols-1 gap-4 mt-6 mx-auto">
           {content.map((content) => (
             <Link
               key={content.id}
               href={`http://localhost:3000/content/viewcontent/${content.id}`}
-              className="card card-side w-[860px] h-[350px] bg-white shadow-xl "
+              className="card card-side w-[860px] h-[350px] bg-white shadow-xl  my-2"
             >
               <figure>
-                <img
-                  src={
-                    "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
-                  }
-                  alt="imgvideo"
-                />
+                <img src={`${assetsUrl}/${content.preview}`} alt="imgvideo" className="bg-black bg-cover h-full w-96"/>
               </figure>
               <div className="card-body">
                 <h2 className="card-title font-bold text-xl text-black">

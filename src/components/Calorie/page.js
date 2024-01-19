@@ -124,10 +124,10 @@ const Calorie = () => {
             setTDEE(calculatedTDEE);
             setResult(calculatedResult);
     
-            console.log('Calculated BMR:', calculatedBMR);
-            console.log('Calculated TDEE:', calculatedTDEE);
-            console.log('Calculated Result:', calculatedResult);
-            console.log('frequency', FREQUENCY_MAP[userInfo.frequency])
+            // console.log('Calculated BMR:', calculatedBMR);
+            // console.log('Calculated TDEE:', calculatedTDEE);
+            // console.log('Calculated Result:', calculatedResult);
+            // console.log('frequency', FREQUENCY_MAP[userInfo.frequency])
         }
     };
     

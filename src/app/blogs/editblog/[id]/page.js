@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
-
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 const editblog = ({ params }) => {
   const directus = new Directus("http://localhost:8055/");
   const assetsUrl = "http://localhost:8055/assets";
-
+  const router = useRouter();
   const [filePreviews, setFilePreviews] = useState([]);
   const [isHavefile, setIsHavefile] = useState(false);
   const [formData, setFormData] = useState({
@@ -53,6 +54,7 @@ const editblog = ({ params }) => {
       await directus.items("blog").updateOne(params.id, updatedData);
 
       alert("Blog post updated successfully!");
+      router.push(`/myblog/${Cookies.get("token")}`);
     } catch (error) {
       console.error("Error updating blog post:", error);
     }
@@ -126,7 +128,13 @@ const editblog = ({ params }) => {
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-        <div className="flex items-center justify-center w-full">
+      <div className="flex justify-end mr-[300px] mt-16">
+        <div className="item-center justify-center w-[135px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
+          <input type="submit" value="อัพเดตบล็อก" className="" />
+        </div>
+      </div>
+        <div className="flex items-center justify-center w-full mt-5">
+          
         <label
           htmlFor="dropzone-file"
           className="relative flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 overflow-hidden"
@@ -136,7 +144,7 @@ const editblog = ({ params }) => {
               <img
                 src={filePreviews[0].file}
                 alt={`Image Preview`}
-                className="w-full h-full object-contain bg-black opacity-50"
+                className="w-full h-full object-cover bg-black opacity-50"
               />
             )}
 
@@ -172,12 +180,9 @@ const editblog = ({ params }) => {
           />
         </div>
 
-        <div className="flex justify-end mt-6">
-          <div className="w-[133px] h-[60px] item-center justify-center rounded-md bg-[#587F61] text-white text-xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
-            <input type="submit" value="อัพเดตบล็อก" />
-          </div>
-        </div>
+        
       </form>
+
     </>
   );
 };

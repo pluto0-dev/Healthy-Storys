@@ -8,6 +8,7 @@ const directus = new Directus("http://localhost:8055/");
 
 const EditContent = ({ params }) => {
  const router =useRouter()
+ 
   const [formData, setFormData] = useState({
     title: "",
     description: "",

@@ -7,16 +7,6 @@ const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
 
-  const [user, setUser] = useState({
-    image_profile: "",
-    username: "",
-    age: 0,
-    gender: "",
-    height: 0,
-    weight: 0,
-    frequency: "",
-  });
-
   useEffect(() => {
     const fetchUser = async () => {
       const userId = Cookies.get("token");
@@ -30,14 +20,22 @@ const Profile = () => {
     fetchUser();
   }, []);
 
-
+  const [user, setUser] = useState({
+    image_profile: "",
+    username: "",
+    age: 0,
+    gender: "",
+    height: 0,
+    weight: 0,
+    frequency: "",
+  });
 
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
   
     if (type === "radio") {
-      setUser((prevUser) => ({ ...prevUser, [name]: formData }));
+      setUser((prevUser) => ({ ...prevUser, [name]: value }));
     } else {
       setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
     }
@@ -47,11 +45,66 @@ const Profile = () => {
     e.preventDefault();
     const userId = Cookies.get("token");
     try {
-      const updateUserData = await directus
-        .items("user")
-        .updateOne(userId, user);
-      setUser(updateUserData);
-      console.log("User data updated successfully:", updateUserData);
+      console.log('file upload on submit', fileId);
+  
+      const updatedUserData = {
+        ...user,
+        image_profile: fileId,
+      };
+      setTimeout(() => {
+        window.location.reload();
+    }, 200);
+      const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
+      setUser(updatedUser);
+      //console.log('User profile updated successfully:', updatedUser);
+      alert("User profile updated successfully")
+    } catch (error) {
+      console.error('Error updating user profile:', error.message);
+    }
+  };
+  
+  const [filePreviews, setFilePreviews] = useState([]);
+  const [isHavefile, setIsHavefile] = useState(false);
+
+  const handlefileChange = async (e) => {
+    const { name, files, type } = e.target;
+  
+    if (name === "profile" && files.length > 0) {
+      const imageFile = files[0];
+      setUser((prevData) => ({ ...prevData, profile: imageFile.name }));
+      setIsHavefile(true);
+      setFilePreviews([{ type: "image", file: imageFile }]);
+      const fileUploadResponse = await uploadImage(imageFile);
+      //console.log('file upload', fileUploadResponse);
+    } else {
+      setIsHavefile(false);
+      setUser((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+  
+  const appId = Cookies.get("token");
+
+  const [fileId, setFileId] = useState();
+  
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append('file', blob, file.name);
+      formData.append('appId', appId);
+      formData.append('storage', 'local');
+  
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+  
+      //console.log('File upload response:', fileUploadResponse);
+
+      setFileId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+
     } catch (error) {
       console.error('Error uploading image:', error.message);
       throw error;
@@ -72,8 +125,8 @@ const Profile = () => {
                 src={URL.createObjectURL(filePreviews[0].file)}
                 alt="User Avatar Preview"
               />
-            ) : user && user.profile ? (
-              <img src={`${assetsUrl}/${user.profile}`} alt="User Avatar" />
+            ) : user && user.image_profile ? (
+              <img src={`${assetsUrl}/${user.image_profile}`} alt="User Avatar" />
             ) : (
               <img src="/profile.png" alt="Default Avatar" />
             )}
@@ -214,4 +267,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
