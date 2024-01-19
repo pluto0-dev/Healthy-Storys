@@ -62,13 +62,18 @@ const editblog = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
+
+    // Check if the input is the description and limit it to 160 characters
+    const newValue =
+      name === "description" ? value.slice(0, 160) : value;
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "file" ? files[0] : value,
+      [name]: type === "file" ? files[0] : newValue,
     }));
 
     // Update preview when changing input
-    if (type === "file" && name === "banner") {
+    if (name === "banner") {
       handlefileChange(e);
     }
   };
@@ -78,20 +83,26 @@ const editblog = ({ params }) => {
 
     if (name === "banner" && files.length > 0) {
       const imageFile = files[0];
-      setFormData((prevData) => ({ ...prevData, bannerName: imageFile.name }));
-      setIsHavefile(true);
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        alert("กรุณาใส่รูปภาพเท่านั้น");
+        return; // Do not proceed with the image upload
+      } else {
+        setFormData((prevData) => ({ ...prevData, bannerName: imageFile.name }));
+        setIsHavefile(true);
 
-      // Read the image file and create a base64 data URL
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onload = () => {
-        setFilePreviews([
-          { type: "image", file: reader.result, name: imageFile.name },
-        ]);
-      };
+        // Read the image file and create a base64 data URL
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+          setFilePreviews([
+            { type: "image", file: reader.result, name: imageFile.name },
+          ]);
+        };
 
-      const fileUploadResponse = await uploadImage(imageFile);
-      console.log("file upload", fileUploadResponse);
+        const fileUploadResponse = await uploadImage(imageFile);
+        console.log("file upload", fileUploadResponse);
+      }
     } else {
       setIsHavefile(false);
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -128,15 +139,15 @@ const editblog = ({ params }) => {
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-      <div className="flex justify-end mr-[300px] mt-16">
-        <div className="item-center justify-center w-[135px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
+      <div className="flex justify-end mr-[300px] mt-16 ">
+        <div className="item-center justify-center w-[155px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
           <input type="submit" value="อัพเดตบล็อก" className="" />
         </div>
       </div>
         <div className="flex items-center justify-center w-full mt-5">
           
         <label
-          htmlFor="dropzone-file"
+          htmlFor="dropzone-image"
           className="relative flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 overflow-hidden"
         >
           <div className="absolute top-0 left-0 w-full h-full">
@@ -155,7 +166,7 @@ const editblog = ({ params }) => {
           </div>
 
           <input
-            id="dropzone-file"
+            id="dropzone-image"
             name="banner"
             type="file"
             className="hidden"
@@ -173,7 +184,6 @@ const editblog = ({ params }) => {
             type="text"
             placeholder="อธิบายรายละเอียดบล็อกของคุณ"
             className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
-            required
             name="description"
             value={formData.description}
             onChange={handleInputChange}

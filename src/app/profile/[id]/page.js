@@ -23,10 +23,10 @@ const Profile = () => {
   const [user, setUser] = useState({
     image_profile: "",
     username: "",
-    age: 0,
+    age: null,
     gender: "",
-    height: 0,
-    weight: 0,
+    height: null,
+    weight: null,
     frequency: "",
   });
 
@@ -34,32 +34,44 @@ const Profile = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
   
+    if (name === "age") {
+      if (value === "" || (!/^\d+$/.test(value))) {
+        setUser((prevUser) => ({ ...prevUser, [name]: null }));
+        e.preventDefault(); // Prevent default only if the condition is met
+        return;
+      }
+    }
+  
     if (type === "radio") {
       setUser((prevUser) => ({ ...prevUser, [name]: value }));
     } else {
       setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
     }
-  };  
+  }; 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = Cookies.get("token");
-    try {
-      console.log('file upload on submit', fileId);
-  
-      const updatedUserData = {
-        ...user,
-        image_profile: fileId,
-      };
-      setTimeout(() => {
-        window.location.reload();
-    }, 200);
-      const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
-      setUser(updatedUser);
-      //console.log('User profile updated successfully:', updatedUser);
-      alert("User profile updated successfully")
-    } catch (error) {
-      console.error('Error updating user profile:', error.message);
+    if (user.age < 15 || user.age > 80) {
+      alert ("ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80")
+    } else {
+      try {
+        console.log('file upload on submit', fileId);
+    
+        const updatedUserData = {
+          ...user,
+          image_profile: fileId,
+        };
+        setTimeout(() => {
+          window.location.reload();
+      }, 250);
+        const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
+        setUser(updatedUser);
+        //console.log('User profile updated successfully:', updatedUser);
+        alert("User profile updated successfully")
+      } catch (error) {
+        console.error('Error updating user profile:', error.message);
+      }
     }
   };
   
@@ -71,10 +83,16 @@ const Profile = () => {
   
     if (name === "profile" && files.length > 0) {
       const imageFile = files[0];
-      setUser((prevData) => ({ ...prevData, profile: imageFile.name }));
-      setIsHavefile(true);
-      setFilePreviews([{ type: "image", file: imageFile }]);
-      const fileUploadResponse = await uploadImage(imageFile);
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        alert("กรุณาใส่รูปภาพเท่านั้น");
+        return; // Do not proceed with the image upload
+      } else {
+        setUser((prevData) => ({ ...prevData, profile: imageFile.name }));
+        setIsHavefile(true);
+        setFilePreviews([{ type: "image", file: imageFile }]);
+        const fileUploadResponse = await uploadImage(imageFile);
+      }
       //console.log('file upload', fileUploadResponse);
     } else {
       setIsHavefile(false);

@@ -36,7 +36,11 @@ const Register = () => {
   // Function to handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    // Check if the input is the username and limit it to 50 characters
+    const newValue = name === 'username' ? value.slice(0, 50) : value;
+
+    setFormData((prevData) => ({ ...prevData, [name]: newValue }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
@@ -52,17 +56,26 @@ const Register = () => {
       !formData.email.endsWith("@hotmail.com") &&
       !formData.email.endsWith("@northbkk.ac.th")
     ) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = "โปรดป้อนที่อยู่อีเมลที่ถูกต้อง";
     }
 
     // Check if password and confirm password match
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Password and confirm password do not match.";
+      newErrors.confirmPassword = "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน";
     }
 
     // Check if password is at least 8 characters long
     if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long.";
+      newErrors.password = "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร";
+    }
+
+    // Check for password strength (uppercase, lowercase, and numbers)
+    if (
+      !/[A-Z]/.test(formData.password) ||
+      !/[a-z]/.test(formData.password) ||
+      !/\d/.test(formData.password)
+    ) {
+      newErrors.password = `ควรมีตัวอักษรพิมพ์ใหญ่-พิมพ์เล็ก และตัวเลข`;
     }
 
     // Check for empty fields and special characters
@@ -82,6 +95,15 @@ const Register = () => {
       return;
     }
   };
+
+  const openRegisterProfile = () => {
+    setIsRegisterProfileOpen(true);
+  };
+
+  const onClose = () => {
+    setIsRegisterProfileOpen(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-start h-screen mt-28 drop-shadow-md">
       {isRegisterProfile ? (
@@ -109,60 +131,68 @@ const Register = () => {
               </h2>
 
               <div className="input-box my-2">
-  <input
-    type="text"
-    placeholder="Enter your email"
-    className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
-    required
-    id="email"
-    name="email"
-    value={formData.email}
-    onChange={handleChange}
-  />
-  {errors.email && <div className="text-red-500">{errors.email}</div>}
-</div>
+                <input
+                  type="text"
+                  placeholder="Enter your email"
+                  className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
+                  required
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                {errors.email && (
+                  <div className="text-red-500">{errors.email}</div>
+                )}
+              </div>
 
-<div className="input-box my-2">
-  <input
-    type="text"
-    placeholder="Enter your username"
-    className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
-    required
-    id="username"
-    name="username"
-    value={formData.username}
-    onChange={handleChange}
-  />
-  {errors.username && <div className="text-red-500">{errors.username}</div>}
-</div>
+              <div className="input-box my-2">
+                <input
+                  type="text"
+                  placeholder="Enter your username"
+                  className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
+                  required
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+                {errors.username && (
+                  <div className="text-red-500">{errors.username}</div>
+                )}
+              </div>
 
-<div className="input-box my-2">
-  <input
-    type="password"
-    placeholder="Enter your password"
-    className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
-    required
-    id="password"
-    name="password"
-    value={formData.password}
-    onChange={handleChange}
-  />
-  {errors.password && <div className="text-red-500">{errors.password}</div>}
-</div>
+              <div className="input-box my-2">
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
+                  required
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                {errors.password && (
+                  <div className="text-red-500">{errors.password}</div>
+                )}
+              </div>
 
-<div className="input-box my-2">
-  <input
-    type="password"
-    placeholder="Enter your confirm password"
-    className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
-    required
-    id="confirmPassword"
-    name="confirmPassword"
-    value={formData.confirmPassword}
-    onChange={handleChange}
-  />
-  {errors.confirmPassword && <div className="text-red-500">{errors.confirmPassword}</div>}
-</div>
+              <div className="input-box my-2">
+                <input
+                  type="password"
+                  placeholder="Enter your confirm password"
+                  className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
+                  required
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                {errors.confirmPassword && (
+                  <div className="text-red-500">{errors.confirmPassword}</div>
+                )}
+              </div>
 
               <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
                 <input type="submit" value="Register" className="w-11/12" />

@@ -44,11 +44,11 @@ const Login = () => {
         alert("Login successful!");
         
         router.push("/");
-
-        
         setTimeout(() => {
-            window.location.reload();
-        }, 200);
+          window.location.reload();
+      }, 200);
+        
+        
         
       } else {
         console.error("Invalid email or password. Please try again.");

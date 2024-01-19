@@ -54,17 +54,17 @@ const EditContent = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-  
-    if (type === "file") {
-      const file = files[0];
-      console.log("File selected:", file);
-  
-      // Handle the file as needed (e.g., save it to state)
-    } else {
-      // Handle other input changes
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
-    }
+
+    // Check if the input is the description and limit it to 255 characters
+    const newValue =
+      name === "description" ? value.slice(0, 255) : value;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "file" ? files[0] : newValue,
+    }));
   };
+
 
     return (
       <>

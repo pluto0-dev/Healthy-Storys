@@ -151,7 +151,14 @@ const Navbar = () => {
                     >
                       <div className="avatar">
                         <div className="w-12 rounded-full">
-                          <img src="/profile.png" />
+                        {user && user.image_profile ? (
+                            <img
+                              src={`${assetsUrl}/${user.image_profile}`}
+                              alt="User Avatar"
+                            />
+                          ) : (
+                            <img src="/profile.png" alt="Default Avatar" />
+                          )}
                         </div>
                       </div>
                     </div>

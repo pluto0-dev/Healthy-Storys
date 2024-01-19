@@ -72,6 +72,7 @@ const EditContent = ({ params }) => {
 
       console.log("Content updated successfully:", response);
       alert("Content updated successfully");
+      router.push(`/myblog/${Cookies.get("token")}`)
     } catch (error) {
       console.error("Error updating content:", error);
     }
@@ -79,30 +80,43 @@ const EditContent = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
+
+    // Check if the input is the description and limit it to 255 characters
+    const newValue =
+      name === "description" ? value.slice(0, 255) : value;
+
     setFormData((prevUser) => ({
       ...prevUser,
-      [name]: type === "file" ? files[0] : value,
+      [name]: type === "file" ? files[0] : newValue,
     }));
   };
+
 
   const handleImageChange = async (e) => {
     const { name, files, type } = e.target;
 
     if (name === "preview" && files.length > 0) {
       const imageFile = files[0];
-      setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
-      setIsHaveimage(true);
 
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onload = () => {
-        setImageFilePreviews([
-          { type: "image", file: reader.result, name: imageFile.name },
-        ]);
-      };
-
-      const fileUploadResponse = await uploadImage(imageFile);
-      console.log("file upload", fileUploadResponse);
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        alert("กรุณาใส่รูปภาพเท่านั้น");
+        return; // Do not proceed with the image upload
+      } else {
+        setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
+        setIsHaveimage(true);
+  
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+          setImageFilePreviews([
+            { type: "image", file: reader.result, name: imageFile.name },
+          ]);
+        };
+  
+        const fileUploadResponse = await uploadImage(imageFile);
+        console.log("file upload", fileUploadResponse);
+      }
     } else {
       setIsHavefile(false);
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -164,6 +178,12 @@ const EditContent = ({ params }) => {
 
   const uploadImage = async (file) => {
     try {
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(file.type)) {
+        const checkType = 'กรุณาใส่ไฟล์รูปภาฟ'
+        return(checkType)
+      }
+
       const formData = new FormData();
       const blob = new Blob([file], { type: file.type });
       formData.append("file", blob, file.name);
@@ -222,7 +242,7 @@ const EditContent = ({ params }) => {
         </div>
 
         <div className="mt-2">
-          <div className="inline-flex items-center mx-[290px]">
+          <div className="flex items-center justify-center mx-[290px]">
             <div className="items-center justify-center mr-5">
               <label
                 htmlFor="dropzone-image"
@@ -231,13 +251,20 @@ const EditContent = ({ params }) => {
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   {imageFilePreviews.length > 0 ? (
                     <>
-                      <div className="w-full h-full bg-cover bg-black bg-center">
+                      <div className="absolute top-0 left-0 w-full h-full">
+                        
                         <img
                           src={imageFilePreviews[0].file}
                           alt={`Image Preview`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover opacity-50"
                         />
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xl font-normal text-center z-10">
+              <p className="font-semibold mb-2">คลิกเพื่อเพิ่มรูป</p>
+              <p>หรือลากและวาง</p>
+            </div>
+          
                       </div>
+                      
                     </>
                   ) : (
                     <>
@@ -260,38 +287,7 @@ const EditContent = ({ params }) => {
               </label>
             </div>
 
-            <div className="items-center justify-center w-full">
-              <label
-                htmlFor="dropzone-video"
-                className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  {videoFilePreviews.length > 0 ? (
-                    <>
-                      <div className="w-full h-full object-contain bg-black">
-                        <video src={videoFilePreviews[0].file} controls />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p className=" mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
-                        <span className="font-semibold">เพิ่มวิดีโอ</span>
-                      </p>
-                      <p className="text-center text-neutral-500 text-xl font-normal">
-                        <span className="font-semibold">หรือลากและวาง</span>
-                      </p>
-                    </>
-                  )}
-                </div>
-                <input
-                  id="dropzone-video"
-                  name="video"
-                  type="file"
-                  className="hidden"
-                  onChange={handleVideoChange}
-                />
-              </label>
-            </div>
+            
           </div>
 
           <div className="input-box flex justify-center mt-5">

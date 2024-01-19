@@ -51,19 +51,34 @@ const CreateContent = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    setFormData((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
-  };  
+  
+    // Check if the input is the description and limit it to 255 characters
+    const newValue =
+      name === "details" ? value.slice(0, 255) : value;
+  
+    setFormData((prevUser) => ({
+      ...prevUser,
+      [name]: type === "file" ? files[0] : newValue,
+    }));
+  };
+  
 
   const handleImageChange = async (e) => {
     const { name, files, type } = e.target;
   
     if (name === "preview" && files.length > 0) {
       const imageFile = files[0];
-      setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
-      setIsHaveimage(true);
-      setImageFilePreviews([{ type: "image", file: imageFile }]);
-      const fileUploadResponse = await uploadImage(imageFile);
-      console.log('file upload', fileUploadResponse);
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        alert("กรุณาใส่รูปภาพเท่านั้น");
+        return; // Do not proceed with the image upload
+      } else {
+        setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
+        setIsHaveimage(true);
+        setImageFilePreviews([{ type: "image", file: imageFile }]);
+        const fileUploadResponse = await uploadImage(imageFile);
+        console.log('file upload', fileUploadResponse);
+      }
     } else {
       setIsHavefile(false);
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -83,7 +98,7 @@ const CreateContent = ({ params }) => {
         const fileUploadResponse = await uploadVideo(file);
         console.log('file upload', fileUploadResponse);
       } else {
-        alert("ไม่สามารถใช้รูปได้")
+        alert("กรุณาใส่วิดีโอเท่านั้น")
       }
     } else {
       setIsHavefile(false);

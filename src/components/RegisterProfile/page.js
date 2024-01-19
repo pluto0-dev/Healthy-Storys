@@ -108,10 +108,25 @@ const RegisterProfile = ({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormDataModal((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  
+    // Check if the input is "age" and validate the value
+    if (name === 'age') {
+      const intValue = parseInt(value, 10);
+  
+      // Check if the value is a valid integer and within the specified range
+      if (!Number.isNaN(intValue) && intValue >= 15 && intValue <= 50) {
+        setFormDataModal((prevData) => ({
+          ...prevData,
+          [name]: intValue,
+        }));
+      } 
+    } else {
+      // For other inputs, update the state as usual
+      setFormDataModal((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const closeModal = () => {
@@ -124,12 +139,23 @@ const RegisterProfile = ({
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Validate the age before submitting the form
+    if (
+      formDataModal.age < 15 ||
+      formDataModal.age > 50 ||
+      !Number.isInteger(formDataModal.age)
+    ) {
+      // Display an alert for invalid age
+      alert('ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80 ');
+      return;
+    }
+  
     // Perform actions with the collected data as needed
-    console.log("Form Data:", formDataModal);
-
+    console.log('Form Data:', formDataModal);
+  
     try {
-      const response = await directus.items("user").createOne({
+      const response = await directus.items('user').createOne({
         email: email,
         username: username,
         password: password,
@@ -139,14 +165,15 @@ const RegisterProfile = ({
         weight: formDataModal.weight,
         frequency: formDataModal.frequency,
       });
-
-      console.log("User registered successfully:", response);
-
-      alert("Registration successful!");
-      router.push("/login");
+  
+      console.log('User registered successfully:', response);
+  
+      alert('Registration successful!');
+      router.push('/login');
     } catch (error) {
-      console.error("Error registering user:", error);
+      console.error('Error registering user:', error);
     }
+  
     onClose();
   };
 

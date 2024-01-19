@@ -34,7 +34,7 @@ const VideoPlayer = ({ params }) => {
       ) : (
         <>
           {content && (
-            <div style={{ width: '990px', height: '680px', backgroundColor: 'black' }}>
+            <div style={{ width: '990px', height: '680px', backgroundColor: 'black' }} className=" ml-2">
             <ReactPlayer
               width="100%"
               height="100%"
@@ -48,11 +48,17 @@ const VideoPlayer = ({ params }) => {
             
           )}
 
-          <div className="mx-5">
+          <div className="ml-10 mt-5">
             {content && (
               <>
-                <h1>{content.title}</h1>
-                <p>{content.description}</p>
+              <div className="bg-white px-5 py-2 rounded-3xl drop-shadow-lg ">
+               <h1 className="font-bold text-3xl ">{content.title}</h1>
+              </div>
+                
+                <div className="mt-5 bg-white px-5 py-2 w-[600px] h-[590px] rounded-3xl drop-shadow-lg overflow-x-auto" >
+                  <p >{content.description}</p>
+                </div>
+                
               </>
             )}
           </div>

@@ -12,8 +12,9 @@ const CreateBlog = () => {
   const router = useRouter();
   const [isHavefile, setIsHavefile] = useState(false);
   const [imageFilePreviews, setImageFilePreviews] = useState([]);
+  const [filePreviews, setFilePreviews] = useState([]);
   const [formData, setFormData] = useState({
-    description: "",
+    description: null,
 
   });
   const handleFormSubmit = async (e) => {
@@ -30,32 +31,53 @@ const CreateBlog = () => {
   
       console.log("Data sent to Directus:", blogResponse);
   
-      router.push("/");
+      router.push(`/myblog/${Cookies.get("token")}`);
       setTimeout(() => {
         window.location.reload();
-    }, 100)
+    }, 200);
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }
   };
+  
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    setFormData((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
-  };  
 
-  const handleImageChange = async (e) => {
-    const { name, files, type } = e.target;
-  
+    // Check if the input is the description and limit it to 160 characters
+    const newValue =
+      name === "description" ? value.slice(0, 160) : value;
+
+    setFormData((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : newValue }));
+  };
+
+  const handlefileChange = async (e) => {
+    const { name, files } = e.target;
+
     if (name === "banner" && files.length > 0) {
       const imageFile = files[0];
-      setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
-     // setIsHaveimage(true);
-      setImageFilePreviews([{ type: "image", file: imageFile }]);
-      const fileUploadResponse = await uploadImage(imageFile);
-      console.log('file upload', fileUploadResponse);
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        alert("กรุณาใส่รูปภาพเท่านั้น");
+        return; // Do not proceed with the image upload
+      } else {
+        setFormData((prevData) => ({ ...prevData, bannerName: imageFile.name }));
+        setIsHavefile(true);
+
+        // Read the image file and create a base64 data URL
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+          setFilePreviews([
+            { type: "image", file: reader.result, name: imageFile.name },
+          ]);
+        };
+
+        const fileUploadResponse = await uploadImage(imageFile);
+        console.log("file upload", fileUploadResponse);
+      }
     } else {
       setIsHavefile(false);
-      //setFormData((prevData) => ({ ...prevData, [name]: value }));
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
   const [imageId, setImageId] = useState();
@@ -97,25 +119,31 @@ const CreateBlog = () => {
 
         <div className="mt-2">
           <div className="flex items-center justify-center w-full">
-            <label
-              htmlFor="dropzone-image"
-              className="flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-               
-                <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-5xl font-normal">
-                  <span className="font-semibold">เพิ่มรูปภาพ</span>
-                </p>
-                <p className="mb-2 w-[354.36px] text-center text-neutral-500 text-xl font-normal">
-                  <span className="font-semibold">หรือลากและวาง</span>
-                </p>
-              </div>
+          <label
+          htmlFor="dropzone-image"
+          className="relative flex flex-col items-center justify-center w-[1110px] h-[504px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-full">
+            {filePreviews.length > 0 && (
+              <img
+                src={filePreviews[0].file}
+                alt={`Image Preview`}
+                className="w-full h-full object-cover bg-black opacity-50"
+              />
+            )}
+
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xl font-normal text-center z-10">
+              <p className="font-semibold mb-2">คลิกเพื่อเพิ่มรูป</p>
+              <p>หรือลากและวาง</p>
+            </div>
+          </div>
               <input
                 id="dropzone-image"
                 name="banner"
                 type="file"
                 className="hidden"
-                onChange={handleImageChange}
+                required
+                onChange={handlefileChange}
               />
               
             </label>
@@ -128,7 +156,6 @@ const CreateBlog = () => {
               type="text"
               placeholder="อธิบายรายละเอียดบล็อกของคุณ"
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
-              required
               name="description"
               value={formData.description}
               onChange={handleInputChange}
