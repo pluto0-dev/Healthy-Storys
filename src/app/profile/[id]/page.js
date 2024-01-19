@@ -6,16 +6,16 @@ import Cookies from "js-cookie";
 const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
+  // const [user, setUser] = useState({
+  //   username: '',
+  //   age: '',
+  //   gender: '',
+  //   height: '',
+  //   weight: '',
+  //   frequency: '',
+  //   profile: null, // File input state
+  // });
 
-  const [user, setUser] = useState({
-    image_profile: "",
-    username: "",
-    age: 0,
-    gender: "",
-    height: 0,
-    weight: 0,
-    frequency: "",
-  });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,6 +29,77 @@ const Profile = () => {
     };
     fetchUser();
   }, []);
+
+  // const handleFileChange = (e) => {
+  //   const { name, files } = e.target;
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     [name]: files[0],
+  //   }));
+  // };
+
+  // const handleInputChange = (e) => {
+  //   const { name, value, type, files } = e.target;
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     [name]: type === 'file' ? files[0] : value,
+  //   }));
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     // Upload the profile image first
+  //     // const fileUuid = await uploadImage();
+  
+  //     // Update user profile with the new file UUID and modified fields
+  //     const updatedUserData = {};
+  
+  //     if (user.age) {
+  //       updatedUserData.age = user.age;
+  //     }
+  
+  //     if (user.gender) {
+  //       updatedUserData.gender = user.gender;
+  //     }
+  
+  //     if (user.height) {
+  //       updatedUserData.height = user.height;
+  //     }
+  
+  //     if (user.weight) {
+  //       updatedUserData.weight = user.weight;
+  //     }
+  
+  //     if (user.frequency) {
+  //       updatedUserData.frequency = user.frequency;
+  //     }
+  //     updatedUserData.profile = 'c92bb995-d6ee-4e4e-af02-0c3068d95510';
+  //     if (updatedUserData) {
+  //       const userId = Cookies.get("token");
+  //       const updatedUser = await directus.items('user').updateOne({
+  //       userId
+  //       }, updatedUserData);
+  
+  //       console.log('User profile updated successfully:', updatedUser);
+  //     } else {
+  //       console.log('No changes to update.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating user profile:', error.message);
+  //   }
+  // };
+
+  const [user, setUser] = useState({
+    profile: "",
+    username: "",
+    age: 0,
+    gender: "",
+    height: 0,
+    weight: 0,
+    frequency: "",
+  });
+
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -44,15 +115,144 @@ const Profile = () => {
     e.preventDefault();
     const userId = Cookies.get("token");
     try {
-      const updateUserData = await directus
-        .items("user")
-        .updateOne(userId, user);
-      setUser(updateUserData);
-      console.log("User data updated successfully:", updateUserData);
+      console.log('file upload on submit', fileId);
+  
+      const updatedUserData = {
+        ...user,
+        profile: fileId,
+      };
+  
+      const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
+      setUser(updatedUser);
+  
+      console.log('User profile updated successfully:', updatedUser);
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error('Error updating user profile:', error.message);
     }
   };
+  
+
+  // const handleFileChange = async (e) => {
+  //   const { name, files } = e.target;
+  //   try {
+
+  
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       profile: fileUploadResponse,
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error handling file change:', error.message);
+  //   }
+  // }
+  const [filePreviews, setFilePreviews] = useState([]);
+  const [isHavefile, setIsHavefile] = useState(false);
+
+  const handlefileChange = async (e) => {
+    const { name, files, type } = e.target;
+  
+    if (name === "profile" && files.length > 0) {
+      // const imageFile = files[0];
+      // setUser((prevData) => ({ ...prevData, profileName: imageFile.name }));
+      setIsHavefile(true);
+      setFilePreviews([{ type: "image", file: imageFile }]);
+      const fileUploadResponse = await uploadImage(imageFile);
+      console.log('file upload', fileUploadResponse);
+    } else {
+      setIsHavefile(false);
+      setUser((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+  
+  const appId = Cookies.get("token");
+
+  // const uploadFile = async ({ file, fileName, appId, documentType, type }) => {
+  //   try {
+  //     const formData = new FormData();
+
+  //     formData.append('file', file);
+  //     formData.append('fileName', fileName);
+  //     formData.append('appId', appId);
+  //     formData.append('documentType', documentType);
+  //     formData.append('type', type);
+
+  //     const response = await fetch("http://localhost:8055/", {
+  //       method: "POST",
+  //       body: formData,
+  //       headers: {
+  //       },
+  //     });
+  //     const data = await response.json();
+  
+  //     return data;
+  //   } catch (error) {
+  //     throw new Error(`Error uploading file: ${error.message}`);
+  //   }
+  // };
+  
+  // const uploadImage = async (filename) => {
+  //   try {
+  //     const fileBlob = await fetch(user.profile).then((response) => response.blob());
+  
+  //     const formData = new FormData();
+  //     formData.append('file', fileBlob, filename || user.profile.name);
+  //     formData.append('appId', appId);
+  //     formData.append('type', ["image/gif", "image/jpeg", "image/jpg", "image/png"]);
+  //     formData.append('storage', 'local');
+  //     formData.append('filename_download', filename || user.profile.name);
+  
+  //     // Make the API request to upload the file
+  //     const fileUploadResponse = await directus.files.createOne(formData, {
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         // No need to set Content-Type, it will be set automatically by FormData
+  //       },
+  //     });
+  
+  //     // Log the response for debugging
+  //     console.log('File upload response:', fileUploadResponse);
+  
+  //     // Assuming the ID is accessible in the response data, return it
+  //     return fileUploadResponse.id;
+  //   } catch (error) {
+  //     // Log and rethrow the error for handling in the calling code
+  //     console.error('Error uploading image:', error.message);
+  //     throw error;
+  //   }
+  // };
+
+  // const allowedImageTypes = ["image/gif", "image/jpeg", "image/jpg", "image/png"];
+
+  // if (!allowedImageTypes.includes(fileBlob.type)) {
+  //   throw new Error('Invalid image type. Please upload a valid image.');
+  // }  
+
+  const [fileId, setFileId] = useState();
+  
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append('file', blob, file.name);
+      formData.append('appId', appId);
+      formData.append('storage', 'local');
+  
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+  
+      console.log('File upload response:', fileUploadResponse);
+
+      setFileId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      throw error;
+    }
+  };
+  
 
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-[url('/bg3.png')] bg-center bg-cover">
@@ -62,9 +262,9 @@ const Profile = () => {
       <div className="flex items-center justify-center ml-6 mb-6">
         <div className="avatar mr-4">
           <div className="w-[136px] rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            {user && user.image_profile ? (
+            {user && user.profile ? (
               <img
-                src={`${assetsUrl}/${user.image_profile}`}
+                src={`${assetsUrl}/${user.profile}`}
                 alt="User Avatar"
               />
             ) : (
@@ -86,8 +286,8 @@ const Profile = () => {
               id="dropzone-file"
               type="file"
               className="hidden"
-              name="image_profile"
-              onChange={handleInputChange}
+              name="profile"
+              onChange={(e) => handlefileChange(e)}
             />
           </label>
         </div>
@@ -181,14 +381,16 @@ const Profile = () => {
                 <option value="">Select Activity</option>
                 <option value="1">ออกกำลังกายน้อยหรือไม่มีเลย</option>
                 <option value="2">ออกกำลังกาย 1-3 ครั้ง/สัปดาห์</option>
-                <option value="3">ออกกำลังกาย 3-5 ครั้ง/สัปดาห์</option>
+                <option value="3">ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</option>
                 <option value="4">
-                อกกำลังกาย 6-7 ครั้ง/สัปดาห์
+                ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
                 </option>
                 <option value="5">
-                ออกกำลังกายเช้าเย็นทุกวัน
+                ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์
                 </option>
-
+                <option value="6">
+                การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ
+                </option>
               </select>
             </div>
 
@@ -205,3 +407,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
