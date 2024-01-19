@@ -26,18 +26,17 @@ const CreateContent = ({ params }) => {
         filter: { user: authToken },
         limit: 1,
       });
-
-      
-
       const contentData = {
         blog: userBlog.data[0].id,
         title: formData.videoClipName,
         description: formData.details,
+        preview: imageId,
+        video: videoId,
       };
 
-      await directus.items("content").createOne(contentData);
+      const createdContent = await directus.items("content").createOne(contentData);
 
-      console.log("Content created successfully:", response);
+      console.log("Content created successfully:", createdContent);
 
       alert("Content created successfully");
       router.push(`/myblog/${Cookies.get("token")}`);
@@ -51,31 +50,27 @@ const CreateContent = ({ params }) => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-  const handleImageChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, type, checked, files } = e.target;
+    setFormData((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
+  };  
 
+  const handleImageChange = async (e) => {
+    const { name, files, type } = e.target;
+  
     if (name === "preview" && files.length > 0) {
-      const file = files[0];
-      const fileType = file.type.split("/")[0];
-
-      if (fileType === "image") {
-        // Set the selected file name in the state for preview
-        //setFormData((prevData) => ({ ...prevData, bannerName: file.name }));
-        setIsHaveimage(true);
-        setImageFilePreviews([{ type: fileType, file }]);
-      } else {
-        alert("ไม่สามารถใช้วิดีโอ เป็นภาพตัวอย่างได้")
-      }
+      const imageFile = files[0];
+      setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
+      setIsHavefile(true);
+      setImageFilePreviews([{ type: "image", file: imageFile }]);
+      const fileUploadResponse = await uploadImage(imageFile);
+      console.log('file upload', fileUploadResponse);
     } else {
       setIsHavefile(false);
-      //setIsHaveimage((prevData) => ({ ...prevData, [name]: value }));
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
 
-  const handleVideoChange = (e) => {
+  const handleVideoChange = async (e) => {
     const { name, value, files } = e.target;
 
     if (name === "video" && files.length > 0) {
@@ -83,19 +78,71 @@ const CreateContent = ({ params }) => {
       const fileType = file.type.split("/")[0];
 
       if (fileType === "video") {
-        // Set the selected file name in the state for preview
-        //setFormData((prevData) => ({ ...prevData, bannerName: file.name }));
         setIsHavefile(true);
-
         setVideoFilePreviews([{ type: fileType, file }]);
+        const fileUploadResponse = await uploadVideo(file);
+        console.log('file upload', fileUploadResponse);
       } else {
         alert("ไม่สามารถใช้รูปได้")
       }
     } else {
       setIsHavefile(false);
-      //setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
+
+  const [imageId, setImageId] = useState();
+  const appId = authToken
+
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append("file", blob, file.name);
+      formData.append("appId", appId);
+      formData.append("storage", "local");
+
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      console.log("File upload response:", fileUploadResponse);
+
+      setImageId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+    } catch (error) {
+      console.error("Error uploading image:", error.message);
+      throw error;
+    }
+  };
+
+  const [videoId, setVideoId] = useState();
+
+  const uploadVideo = async (file) => {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([file], { type: file.type });
+      formData.append("file", blob, file.name);
+      formData.append("appId", appId);
+      formData.append("storage", "local");
+
+      const fileUploadResponse = await directus.files.createOne(formData, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      console.log("File upload response:", fileUploadResponse);
+
+      setVideoId(fileUploadResponse.id);
+      return fileUploadResponse.id;
+    } catch (error) {
+      console.error("Error uploading image:", error.message);
+      throw error;
+    }
+  };
+
 
   return (
     <form onSubmit={handleFormSubmit}>

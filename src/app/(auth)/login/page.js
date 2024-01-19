@@ -48,7 +48,7 @@ const Login = () => {
         
         setTimeout(() => {
             window.location.reload();
-        }, 100);
+        }, 200);
         
       } else {
         console.error("Invalid email or password. Please try again.");

@@ -80,7 +80,7 @@ const RegisterProfile = ({
   const [selectedActivity, setSelectedActivity] = useState("กรุณาเลือกความถี่");
   const [formDataModal, setFormDataModal] = useState({
     age: formData.age || "",
-    gender: formData.gender || "null",
+    gender: formData.gender || "",
     height: formData.height || "",
     weight: formData.weight || "",
     frequency: "",
@@ -150,6 +150,34 @@ const RegisterProfile = ({
     onClose();
   };
 
+  const handleProfileSubmitWithSkip = async (e) => {
+    e.preventDefault();
+
+    // Perform actions with the collected data as needed
+    console.log("Form Data:", formDataModal);
+
+    try {
+      const response = await directus.items("user").createOne({
+        email: email,
+        username: username,
+        password: password,
+        age: "",
+        gender: "",
+        height: "",
+        weight: "",
+        frequency: "",
+      });
+
+      console.log("User registered successfully:", response);
+
+      alert("Registration successful!");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+    onClose();
+  };
+
   return (
     <>
       {isOpen && (
@@ -159,7 +187,7 @@ const RegisterProfile = ({
               <div className="card-title text-green-700 text-2xl font-semibold font-inter justify-center mt-6">
                 กรอกรายละเอียดเพื่อคำนวณแคลอรี่ของคุณ
               </div>
-              <div className=" absolute  end-20 text-xl" onClick={closeModal}>
+              <div className=" absolute  end-20 text-xl" onClick={handleProfileSubmitWithSkip}>
                 ข้าม
               </div>
 

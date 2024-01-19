@@ -2,13 +2,14 @@ import React from "react";
 import { FREQUENCY_MAP } from "../Calorie/page";
 import { GENDER_MAP } from "../Calorie/page";
 
-const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult, userInfo}) => {
+const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult, userInfo, clearFunction }) => {
   const handleButtonClick = () => {
     console.log("Button clicked");
   };
 
   const handleCloseButtonClick = () => {
     closeModal();
+    clearFunction();
   };
 
   return (
@@ -74,7 +75,7 @@ const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult
 
       <div className="flex justify-center mt-6">
         <button
-          onClick={closeModal}
+          onClick={handleCloseButtonClick}
           className="bg-[#587F61] px-4 py-2 text-md font-semibold text-white rounded-md shadow-sm hover:bg-[#4a6b52]"
         >
           ออกจากหน้านี้

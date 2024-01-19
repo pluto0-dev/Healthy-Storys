@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
-
+  const [formData, setFormData] = useState("");
   const [user, setUser] = useState({
     image_profile: "",
     username: "",
@@ -32,10 +32,18 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-
+  
     if (type === "radio") {
-      setUser((prevUser) => ({ ...prevUser, [name]: formData }));
+      setFormData(value); 
+      setUser((prevUser) => ({ ...prevUser, [name]: value }));
     } else {
+      // Validate "age" to allow only integer values
+      if (name === "age" && value !== "" && !/^\d+$/.test(value)) {
+        // Display an error or handle it as needed
+        console.error("Age must be a valid integer.");
+        return;
+      }
+  
       setUser((prevUser) => ({ ...prevUser, [name]: value }));
     }
   };
@@ -48,7 +56,8 @@ const Profile = () => {
         .items("user")
         .updateOne(userId, user);
       setUser(updateUserData);
-      console.log("User data updated successfully:", updateUserData);
+      //console.log("User data updated successfully:", updateUserData);
+      alert("User data updated successfully")
     } catch (error) {
       console.error("Error updating user:", error);
     }

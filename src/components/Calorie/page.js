@@ -24,20 +24,21 @@ const Calorie = () => {
         calculatedResult: null,
       });
     const [userInfo, setUserInfo] = useState({
-    age: null,
-    gender: null,
-    weight: null,
-    height: null,
-    frequency: null,
+      age: null,
+      gender: null,
+      weight: null,
+      height: null,
+      frequency: null,
     });
 
     const [isLoading, setIsLoading] = useState(true);
     const fetchUserData = async () => {
         try {
             // const response = await directus.items('user').readOne(userID);
-          const response = await directus.items('user').readOne();
+          const response = await directus.items('user').readOne(userID);
           const userData = response
           setUserData(userData);
+         
         } catch (error) {
           console.error('Error fetching user data:', error);
         } finally {
@@ -49,7 +50,6 @@ const Calorie = () => {
 
     const openModal = () => {
         setIsModalOpen(true);
-        // fetchUserData();
     };
 
     const closeModal = () => {
@@ -91,7 +91,7 @@ const Calorie = () => {
         const totalCaloriesConsumed = breakfast + lunch + dinner;
         const caloriesRemaining = tdee - totalCaloriesConsumed;
         result = Math.round(caloriesRemaining);
-        console.log(result);
+        //console.log(result);
         return result;
       };
       
@@ -140,7 +140,6 @@ const Calorie = () => {
     calculateValues();
     closeModal();
     openResultModal();
-    clearFunction();
   };
         
 
@@ -150,22 +149,25 @@ const Calorie = () => {
 
       useEffect(() => {
         if (!isLoading) {
-            setUserInfo({
-                age: userData.age,
-                gender: userData.gender,
-                weight: userData.weight,
-                height: userData.height,
-                frequency: userData.frequency,
-              });
-            calculateValues();
-          }
+          setUserInfo({
+            age: userData.age,
+            gender: userData.gender,
+            weight: userData.weight,
+            height: userData.height,
+            frequency: userData.frequency,
+          });
+          calculateValues();
+        }
       }, [userData, breakfastInput, lunchInput, dinnerInput]);
+      
 
     
       return (
         <>
+        
     <button
       onClick={openModal}
+      
       className="fixed right-0 bottom-0 m-4 mt-20 ml-20 p-2 bg-white rounded-full size-[4.5rem] flex justify-center items-center drop-shadow-md"
     >
       <div className="w-11 h-11 bg-white flex items-center justify-center border-4 rounded" style={{ borderColor: '#507458' }}>
@@ -258,6 +260,7 @@ const Calorie = () => {
                 calculatedResult={calculatedValues.calculatedResult}
                 userInfo={userInfo}
                 closeModal={() => setIsResultModalOpen(false)}
+                clearFunction={clearFunction}
                 />
             )}
         </>

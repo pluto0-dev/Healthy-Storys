@@ -160,7 +160,7 @@ const Navbar = () => {
                       className="dropdown-content z-[1] menu p-2 shadow bg-[#eef2ef] rounded-box w-52 text-[#587F61]"
                     >
                       <li>
-                        <Link href={`/profile/`}>แก้ไขโปรไฟล์</Link>
+                        <Link href={`/profile/${Cookies.get("token")}}`}>แก้ไขโปรไฟล์</Link>
                       </li>
                       <li>
                         <a onClick={handleLogout}>ล็อกเอาท์</a>
