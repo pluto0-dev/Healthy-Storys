@@ -193,7 +193,7 @@ const myBlogs = ({ params }) => {
           </div>
         </div>
       </div>
-      <div className="flex  mt-5 item-center justify-end mr-[410px]">
+      <div className="flex  mt-5 item-center justify-end mr-[410px] ">
         <Link
           href={`/blogs/editblog/${blogs[0]?.id}`}
           className="w-1/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"

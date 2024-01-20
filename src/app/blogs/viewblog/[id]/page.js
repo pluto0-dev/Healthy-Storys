@@ -103,8 +103,8 @@ const Blogs = ({ params }) => {
           </div>
         </div>
       </div>
-      <div className="flex items-end justify-end">
-        <div className="grid grid-cols-1 gap-4 mt-6 mx-auto">
+      <div className="flex items-end justify-end ">
+        <div className="grid grid-cols-1 gap-4 mt-6 mx-auto ">
           {content.map((content) => (
             <Link
               key={content.id}
