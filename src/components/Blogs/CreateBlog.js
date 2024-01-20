@@ -15,12 +15,11 @@ const CreateBlog = () => {
   const [filePreviews, setFilePreviews] = useState([]);
   const [formData, setFormData] = useState({
     description: null,
-
   });
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Now create the blog entry with the file ID
+      console.log('formdata',formData)
       const blogResponse = await directus.items("blog").createOne({
         user: {
           id: Cookies.get("token"),
@@ -32,7 +31,6 @@ const CreateBlog = () => {
       console.log("Data sent to Directus:", blogResponse);
   
       router.push(`/myblog/${Cookies.get("token")}`);
-      
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }
@@ -140,7 +138,6 @@ const CreateBlog = () => {
                 name="banner"
                 type="file"
                 className="hidden"
-                
                 onChange={handlefileChange}
               />
               
@@ -154,7 +151,7 @@ const CreateBlog = () => {
               type="text"
               placeholder="อธิบายรายละเอียดบล็อกของคุณ"
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
-              name="กรุณาใส่คำอธิบาย"
+              name="description"
               value={formData.description}
               onChange={handleInputChange}
             />

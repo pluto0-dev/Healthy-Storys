@@ -48,6 +48,7 @@ const Blogs = ({ params }) => {
         const blogIds = blogs.map((blog) => blog.id);
         const contentResponse = await directus.items("content").readByQuery({
           filter: { blog: { id: { _in: blogIds } } },
+          sort: ['-date_create'],
         });
         setContent(contentResponse.data);
         console.log(contentResponse.data);
@@ -58,6 +59,23 @@ const Blogs = ({ params }) => {
 
     fetchContent();
   }, [blogs]);
+
+  // useEffect(() => {
+  //   const fetchContent = async () => {
+  //     try {
+  //       const blogIds = blogs.map((blog) => blog.id);
+  //       const contentResponse = await directus.items("content").readByQuery({
+  //         filter: { blog: { id: { _in: blogIds } } },
+  //       });
+  //       setContent(contentResponse.data);
+  //       console.log(contentResponse.data);
+  //     } catch (error) {
+  //       console.error("Error fetching content:", error);
+  //     }
+  //   };
+
+  //   fetchContent();
+  // }, [blogs]);
 
   return (
     <>

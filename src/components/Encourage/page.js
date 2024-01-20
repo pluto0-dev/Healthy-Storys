@@ -54,7 +54,7 @@ const PopUp = () => {
 
     const timer = setInterval(() => {
       fetchMotivation();
-    }, 500000000);
+    }, 5000000000);
 
     return () => {
       clearInterval(timer);
@@ -65,11 +65,12 @@ const PopUp = () => {
     <>
       {showPopUp && isLoggedIn && (
         <dialog id="my_modal_2" className="modal">
-          <div className="modal-box bg-[#FFB55F] text-black drop-shadow-md absolute end-5 mr-16 bottom-64">
-            <p className="py-4 text-3xl flex justify-center w-full h-full p-5">🎉{motivation}🎉</p>
+          <div className="modal-box bg-[#FFF] text-black drop-shadow-md absolute end-5 mr-16 bottom-64">
+          <div className="modal-header flex justify-between items-center text-3xl p-3">🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉</div>
+            <p className="py-4 text-3xl flex justify-center text-center w-full h-full p-5">{motivation}</p>
             <div className=" modal-backdrop">
               <button
-                className="text-gray-200 absolute top-3 right-4 text-xl"
+                className="text-black absolute top-3 right-4 text-xl"
                 onClick={closePopUpHandler}
               >
                 x

@@ -95,7 +95,6 @@ const Navbar = () => {
           )}
         </div>
         </div>
-        
         <div className="navbar-end">
           {isLoggedIn ? (
             <>
@@ -138,7 +137,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <Link
-                    href="/blogs/create"
+                    href="/rule"
                     className="btn btn-ghost btn-circle text-white text-l font-bold bg-[#587F61] drop-shadow-lg w-48 mr-6 rounded-[10px] justify-center items-center gap-2.5 hover:bg-[#496950]"
                   >
                     + สร้างบล็อกข่าวของคุณ

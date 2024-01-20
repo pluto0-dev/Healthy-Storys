@@ -35,13 +35,15 @@ const Profile = () => {
     const { name, value, type, checked, files } = e.target;
   
     if (name === "age") {
-      if (e.key === '.' || e.key === '-') {
+      const currentValue = parseFloat(value);
+      if (e.key === '.' || e.key === '-' || currentValue < 0 || e.key === 'e') {
         e.preventDefault();
       } else {
           setUser((prevUser) => ({ ...prevUser, [name]: value }));
       }
     } else if (name === "weight" || name === "height") {
-      if (e.key === '-') {
+      const currentValue = parseFloat(value);
+      if (e.key === '-' || currentValue < 0 || e.key === 'e') {
         e.preventDefault();
       } else {
         const newValue = value.replace(/[^0-9]/g, '');
