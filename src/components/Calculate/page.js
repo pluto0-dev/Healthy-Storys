@@ -1,7 +1,8 @@
 import React from "react";
 import { FREQUENCY_MAP } from "../Calorie/page";
 import { GENDER_MAP } from "../Calorie/page";
-
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult, userInfo, clearFunction }) => {
   const handleButtonClick = () => {
     console.log("Button clicked");
@@ -11,7 +12,11 @@ const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult
     closeModal();
     clearFunction();
   };
-
+  const gotoprofile = () => {
+    closeModal();
+    router.push(`/profile/${Cookies.get("token")}}`)
+  }
+const router = useRouter()
   return (
     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
     <div className="bg-white p-8 rounded-tl-[20px] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[20px] shadow-md w-[500px] m-4 overflow-hidden">
@@ -19,9 +24,29 @@ const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult
         <div className="mb-6 font-semibold text-black text-lg">ข้อมูลโภชนาการของคุณ</div>
 
         <div className="flex justify-center items-center mb-4">
-          <div className="text-black text-xl">แคลอรีที่เหลือในวันนี้:</div>
-          <div className="ml-2 text-[#FFB55F] text-xl">{calculatedResult}</div>
-        </div>
+        <div className="text-black text-xl">
+            {calculatedResult > 0
+              ? "แคลอรีที่เหลือในวันนี้ :"
+              : calculatedResult === 0
+              ? "แคลอรี่ไม่เหลือไม่เกิน เป๊ะมาก"
+              : "ทานแคลอรี่เกิน :"}
+          </div>
+          <div className="ml-2 text-xl">
+            {calculatedResult > 0 ? (
+              <>
+                <span className="text-[#FFB55F]">{calculatedResult}</span>
+                <span className="text-black"> เก่งมาก</span>
+              </>
+            ) : calculatedResult === 0 ? (
+              ""
+            ) : (
+              <>
+                <span className="text-[#FFB55F]">{Math.abs(calculatedResult)}</span>
+                <span className="text-black"> ไว้พรุ่งนี้เอาใหม่นะ</span>
+              </>
+            )}
+          </div>
+          </div>
         <div className="flex justify-center items-center mb-4">
           <div className="text-black text-xl">BMR :</div>
           <div className="ml-2 text-[#FFB55F] text-xl">{Math.round(calculatedBMR)}</div>
@@ -68,7 +93,7 @@ const Calculate = ({ closeModal, calculatedBMR, calculatedTDEE, calculatedResult
         </div>
         <div className="inline-flex ">
           <p className="text-black">การแก้ไขข้อมูลเพื่อคำนวณใหม่</p>
-          <p className="ml-2 text-[#3E5A45]">คลิกที่นี่</p>
+          <button className="ml-2 text-[#3E5A45]" onClick={gotoprofile}>คลิกที่นี่</button>
         </div>
 
       </div>

@@ -36,7 +36,6 @@ const Calorie = () => {
   const [isLoading, setIsLoading] = useState(true);
   const fetchUserData = async () => {
     try {
-      // const response = await directus.items('user').readOne(userID);
       const response = await directus.items("user").readOne(userID);
       const userData = response;
       setUserData(userData);
@@ -82,17 +81,21 @@ const Calorie = () => {
       5: 1.9,
     };
     let tdee;
-    const multiplier = FREQUENCY_MULTIPLIERS[frequency] || 1.2;
-    tdee = bmr * multiplier;
+    const roundedBMR = Math.round(bmr);
+    const multiplier = FREQUENCY_MULTIPLIERS[frequency];
+    console.log(roundedBMR)
+    console.log(multiplier)
+    console.log(Math.round(roundedBMR * multiplier))
+    tdee = roundedBMR * multiplier;
     return tdee;
   };
 
   const calculateResult = (tdee, breakfast, lunch, dinner) => {
     let result;
+    const roundedTDEE = Math.round(tdee);
     const totalCaloriesConsumed = breakfast + lunch + dinner;
-    const caloriesRemaining = tdee - totalCaloriesConsumed;
+    const caloriesRemaining = roundedTDEE - totalCaloriesConsumed;
     result = Math.round(caloriesRemaining);
-    //console.log(result);
     return result;
   };
 

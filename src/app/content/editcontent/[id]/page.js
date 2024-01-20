@@ -72,7 +72,7 @@ const EditContent = ({ params }) => {
 
       console.log("Content updated successfully:", response);
       alert("Content updated successfully");
-      router.push(`/myblog/${Cookies.get("token")}`)
+      router.push(`/myblog/${Cookies.get("token")}`);
     } catch (error) {
       console.error("Error updating content:", error);
     }
@@ -82,15 +82,13 @@ const EditContent = ({ params }) => {
     const { name, value, type, checked, files } = e.target;
 
     // Check if the input is the description and limit it to 255 characters
-    const newValue =
-      name === "description" ? value.slice(0, 255) : value;
+    const newValue = name === "description" ? value.slice(0, 255) : value;
 
     setFormData((prevUser) => ({
       ...prevUser,
       [name]: type === "file" ? files[0] : newValue,
     }));
   };
-
 
   const handleImageChange = async (e) => {
     const { name, files, type } = e.target;
@@ -105,7 +103,7 @@ const EditContent = ({ params }) => {
       } else {
         setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
         setIsHaveimage(true);
-  
+
         const reader = new FileReader();
         reader.readAsDataURL(imageFile);
         reader.onload = () => {
@@ -113,7 +111,7 @@ const EditContent = ({ params }) => {
             { type: "image", file: reader.result, name: imageFile.name },
           ]);
         };
-  
+
         const fileUploadResponse = await uploadImage(imageFile);
         console.log("file upload", fileUploadResponse);
       }
@@ -123,56 +121,6 @@ const EditContent = ({ params }) => {
     }
   };
 
-  const handleVideoChange = async (e) => {
-    const { name, value, files } = e.target;
-  
-    if (name === "video" && files.length > 0) {
-      const file = files[0];
-      const fileType = file.type.split("/")[0];
-  
-      if (fileType === "video") {
-        setIsHavefile(true);
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async () => {
-          setVideoFilePreviews([
-            { type: "video", file: reader.result, name: file.name },
-          ]);
-  
-          // Create a video element
-          const videoElement = document.createElement("video");
-          videoElement.controls = true;
-          videoElement.src = reader.result;
-          videoElement.style.width = "100%";
-  
-          // Get the container element (replace 'videoContainer' with your container ID or class)
-          const videoContainer = document.getElementById("videoContainer");
-  
-          // Check if the container element exists
-          if (videoContainer) {
-            // Clear existing content
-            videoContainer.innerHTML = "";
-  
-            // Append the video element to the container
-            videoContainer.appendChild(videoElement);
-          } else {
-            console.error("Container element not found.");
-          }
-  
-          // You can also upload the video to the server if needed
-          const fileUploadResponse = await uploadVideo(file);
-          console.log("file upload", fileUploadResponse);
-        };
-      } else {
-        alert("ไม่สามารถใช้รูปได้");
-      }
-    } else {
-      setIsHavefile(false);
-    }
-  };
-  
-  
-
   const [imageId, setImageId] = useState();
   const appId = authToken;
 
@@ -180,8 +128,8 @@ const EditContent = ({ params }) => {
     try {
       const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!allowedImageTypes.includes(file.type)) {
-        const checkType = 'กรุณาใส่ไฟล์รูปภาฟ'
-        return(checkType)
+        const checkType = "กรุณาใส่ไฟล์รูปภาฟ";
+        return checkType;
       }
 
       const formData = new FormData();
@@ -205,7 +153,6 @@ const EditContent = ({ params }) => {
       throw error;
     }
   };
-
   const [videoId, setVideoId] = useState();
 
   const uploadVideo = async (file) => {
@@ -249,33 +196,19 @@ const EditContent = ({ params }) => {
                 className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde relative overflow-hidden"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  {imageFilePreviews.length > 0 ? (
-                    <>
-                      <div className="absolute top-0 left-0 w-full h-full">
-                        
-                        <img
-                          src={imageFilePreviews[0].file}
-                          alt={`Image Preview`}
-                          className="w-full h-full object-cover opacity-50"
-                        />
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xl font-normal text-center z-10">
-              <p className="font-semibold mb-2">คลิกเพื่อเพิ่มรูป</p>
-              <p>หรือลากและวาง</p>
-            </div>
-          
-                      </div>
-                      
-                    </>
-                  ) : (
-                    <>
-                      <p className=" mt-14 mb-2 text-center text-neutral-500 text-5xl font-normal">
-                        <span className="font-semibold">เพิ่มรูปภาพ</span>
-                      </p>
-                      <p className="text-center text-neutral-500 text-xl font-normal">
-                        <span className="font-semibold">หรือลากและวาง</span>
-                      </p>
-                    </>
-                  )}
+                  <div className="absolute top-0 left-0 w-full h-full">
+                    {imageFilePreviews.length > 0 && (
+                      <img
+                        src={imageFilePreviews[0].file}
+                        alt={`Image Preview`}
+                        className="w-full h-full object-cover opacity-50"
+                      />
+                    )}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xl font-normal text-center z-10">
+                      <p className="font-semibold mb-2">คลิกเพื่อเพิ่มรูป</p>
+                      <p>หรือลากและวาง</p>
+                    </div>
+                  </div>
                 </div>
                 <input
                   id="dropzone-image"
@@ -286,8 +219,6 @@ const EditContent = ({ params }) => {
                 />
               </label>
             </div>
-
-            
           </div>
 
           <div className="input-box flex justify-center mt-5">
@@ -311,11 +242,11 @@ const EditContent = ({ params }) => {
             <textarea
               type="text"
               name="description"
-              placeholder="Describe the details of your video clip."
+              placeholder="กรุณาใส่คำอธิบาย."
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
               value={formData.description}
               onChange={handleInputChange}
-              required
+             
             />
           </div>
         </div>

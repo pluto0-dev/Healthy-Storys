@@ -35,40 +35,67 @@ const Profile = () => {
     const { name, value, type, checked, files } = e.target;
   
     if (name === "age") {
-      if (value === "" || (!/^\d+$/.test(value))) {
-        setUser((prevUser) => ({ ...prevUser, [name]: null }));
-        e.preventDefault(); // Prevent default only if the condition is met
-        return;
+      if (e.key === '.' || e.key === '-') {
+        e.preventDefault();
+      } else {
+          setUser((prevUser) => ({ ...prevUser, [name]: value }));
+      }
+    } else if (name === "weight" || name === "height") {
+      if (e.key === '-') {
+        e.preventDefault();
+      } else {
+        const newValue = value.replace(/[^0-9]/g, '');
+        setUser((prevUser) => ({ ...prevUser, [name]: value}));
+      }
+  
+    } else {
+      if (type === "radio") {
+        setUser((prevUser) => ({ ...prevUser, [name]: value }));
+      } else {
+        setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
       }
     }
-  
-    if (type === "radio") {
-      setUser((prevUser) => ({ ...prevUser, [name]: value }));
-    } else {
-      setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
-    }
-  }; 
-
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = Cookies.get("token");
+  
     if (user.age < 15 || user.age > 80) {
-      alert ("ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80")
+      alert("ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80");
     } else {
       try {
-        console.log('file upload on submit', fileId);
-    
+        // Check if the username has been changed
+        const originalUserData = await directus.items("user").readOne(userId);
+        const isUsernameChanged = originalUserData.username !== user.username;
+  
+        if (isUsernameChanged) {
+          // Check if the new username already exists
+          const allUsersResponse = await directus.items("user").readByQuery({ sort: ['id'] });
+          const existingUsername = allUsersResponse.data.some(existingUser => existingUser.username === user.username);
+  
+          if (existingUsername) {
+            alert("กรุณาเปลี่ยนชื่อผู้ใช้งานอื่น เนื่องจากมีในระบบแล้ว");
+            return; // Stop the submission if the username already exists
+          }
+        }
+  
+        // Check if the username length exceeds 50 characters
+        if (user.username.length > 50) {
+          alert("ชื่อผู้ใช้งานต้องไม่เกิน 50 ตัวอักษร");
+          return;
+        }
+  
+        // Continue with the submission if the username is not changed, is unique, and within the length limit
         const updatedUserData = {
           ...user,
           image_profile: fileId,
         };
         setTimeout(() => {
           window.location.reload();
-      }, 250);
+        }, 250);
         const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
         setUser(updatedUser);
-        //console.log('User profile updated successfully:', updatedUser);
-        alert("User profile updated successfully")
+        alert("User profile updated successfully");
       } catch (error) {
         console.error('Error updating user profile:', error.message);
       }
@@ -117,8 +144,6 @@ const Profile = () => {
           'Accept': 'application/json',
         },
       });
-  
-      //console.log('File upload response:', fileUploadResponse);
 
       setFileId(fileUploadResponse.id);
       return fileUploadResponse.id;
@@ -185,15 +210,17 @@ const Profile = () => {
                 className="input input-bordered w-2/4 max-w-ws bg-[#cbd7ce] placeholder-[#587F61] ml-4 "
                 required
               />
+           
             </div>
             <div className="input-box my-2 ml-36 mr-0">
             อายุ
               <input
-                type="text"
+                type="number"
                 name="age"
-                placeholder="Enter your age"
+                placeholder="กรุณาใส่อายุ"
                 value={user.age}
                 onChange={handleInputChange}
+                onKeyDown={handleInputChange}
                 className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] mx-9"
                 required
               />
@@ -208,7 +235,8 @@ const Profile = () => {
                 value="male"
                 checked={user.gender === "male"}
                 onChange={handleInputChange}
-                className="radio checked:bg-[#587F61] ml-10"
+                required
+                className="radio checked:bg-[#587F61] ml-10 mr-3"
               />
               <label htmlFor="male">ชาย</label>
               <input
@@ -218,7 +246,8 @@ const Profile = () => {
                 value="female"
                 checked={user.gender === "female"}
                 onChange={handleInputChange}
-                className="radio checked:bg-[#587F61] ml-10"
+                required
+                className="radio checked:bg-[#587F61] ml-10 mr-3"
               />
               <label htmlFor="female">หญิง</label>
             </div>
@@ -226,24 +255,26 @@ const Profile = () => {
             <div className="input-box my-2 ml-36 mr-0 ">
             ความสูง
               <input
-                type="text"
+                type="number"
                 name="height"
-                placeholder="Enter your height"
+                placeholder="กรุณาใส่ความสูง"
                 className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] ml-3"
                 value={user.height}
                 onChange={handleInputChange}
+                onKeyDown={handleInputChange}
                 required
               />
             </div>
             <div className="input-box my-2 ml-36 mr-0">
             น้ำหนัก
               <input
-                type="text"
+                type="number"
                 name="weight"
-                placeholder="Enter your weight"
+                placeholder="กรุณาใส่น้ำหนัก"
                 className="input input-bordered w-2/4 bg-[#cbd7ce] placeholder-[#587F61] ml-[18px]"
                 value={user.weight}
                 onChange={handleInputChange}
+                onKeyDown={handleInputChange}
                 required
               />
             </div>
@@ -256,19 +287,17 @@ const Profile = () => {
                 className="btn m-1 bg-[#cbd7ce] w-2/4 ml-[20px] border-none text-[#587F61]  hover:bg-[#bcc7bf]"
                 name="frequency"
               >
-                <option value="">Select Activity</option>
-                <option value="1">ออกกำลังกายน้อยหรือไม่มีเลย</option>
-                <option value="2">ออกกำลังกาย 1-3 ครั้ง/สัปดาห์</option>
-                <option value="3">ออกกำลังกาย 4-5 ครั้ง/สัปดาห์</option>
+                <option value="">กรุณาเลือกความถี่ในการออกกำลังกาย</option>
+                <option value="1">ไม่ออกกำลังกาย</option>
+                <option value="2">1-3 วัน/สัปดาห์</option>
+                <option value="3">4-5 วัน/สัปดาห์</option>
                 <option value="4">
-                ออกกำลังกายเป็นประจำทุกวันหรือออกกำลังกายแบบเข้มข้น 3-4 ครั้ง/สัปดาห์
+                6-7 วัา/สัปดาห์
                 </option>
                 <option value="5">
-                ออกกำลังกายแบบเข้มข้น 6-7 ครั้ง/สัปดาห์
+                ออกกำลังกายทุกวันเช้า/เย็น
                 </option>
-                <option value="6">
-                การออกกำลังกายที่เข้มข้นมากทุกวันหรือการทำงานทางกายภาพ
-                </option>
+              
               </select>
             </div>
 

@@ -32,9 +32,7 @@ const CreateBlog = () => {
       console.log("Data sent to Directus:", blogResponse);
   
       router.push(`/myblog/${Cookies.get("token")}`);
-      setTimeout(() => {
-        window.location.reload();
-    }, 200);
+      
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }
@@ -142,7 +140,7 @@ const CreateBlog = () => {
                 name="banner"
                 type="file"
                 className="hidden"
-                required
+                
                 onChange={handlefileChange}
               />
               
@@ -156,7 +154,7 @@ const CreateBlog = () => {
               type="text"
               placeholder="อธิบายรายละเอียดบล็อกของคุณ"
               className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
-              name="description"
+              name="กรุณาใส่คำอธิบาย"
               value={formData.description}
               onChange={handleInputChange}
             />

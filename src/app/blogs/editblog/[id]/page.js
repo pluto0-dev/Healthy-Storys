@@ -54,7 +54,9 @@ const editblog = ({ params }) => {
       await directus.items("blog").updateOne(params.id, updatedData);
 
       alert("Blog post updated successfully!");
+      //console.log(updatedData)
       router.push(`/myblog/${Cookies.get("token")}`);
+
     } catch (error) {
       console.error("Error updating blog post:", error);
     }

@@ -109,17 +109,27 @@ const RegisterProfile = ({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
   
-    // Check if the input is "age" and validate the value
-    if (name === 'age') {
+    if (name === "age") {
       const intValue = parseInt(value, 10);
-  
-      // Check if the value is a valid integer and within the specified range
+
       if (!Number.isNaN(intValue) && intValue >= 15 && intValue <= 50) {
         setFormDataModal((prevData) => ({
           ...prevData,
           [name]: intValue,
         }));
       } 
+      if (e.key === '.' || e.key === '-') {
+        e.preventDefault();
+      } else {
+          setFormDataModal((prevUser) => ({ ...prevUser, [name]: value }));
+      }
+    } else if (name === "weight" || name === "height") {
+      if (e.key === '-') {
+        e.preventDefault();
+      } else {
+        const newValue = value.replace(/[^0-9]/g, '');
+        setFormDataModal((prevUser) => ({ ...prevUser, [name]: value}));
+      }
     } else {
       // For other inputs, update the state as usual
       setFormDataModal((prevData) => ({
@@ -231,6 +241,7 @@ const RegisterProfile = ({
                     name="age"
                     value={formData.age}
                     onChange={handleInputChange}
+                    onKeyDown={handleInputChange}
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกอายุ"
                   />
@@ -279,6 +290,7 @@ const RegisterProfile = ({
                     name="height"
                     value={formData.height}
                     onChange={handleInputChange}
+                    onKeyDown={handleInputChange}
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกความสูง"
                   />
@@ -298,6 +310,7 @@ const RegisterProfile = ({
                     name="weight"
                     value={formData.weight}
                     onChange={handleInputChange}
+                    onKeyDown={handleInputChange}
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกน้ำหนัก"
                   />

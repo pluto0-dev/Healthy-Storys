@@ -51,13 +51,12 @@ const Register = () => {
     const newErrors = {};
 
     // Validate email format
-    if (
-      !formData.email.endsWith("@gmail.com") &&
-      !formData.email.endsWith("@hotmail.com") &&
-      !formData.email.endsWith("@northbkk.ac.th")
-    ) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
       newErrors.email = "โปรดป้อนที่อยู่อีเมลที่ถูกต้อง";
     }
+    
 
     // Check if password and confirm password match
     if (formData.password !== formData.confirmPassword) {
@@ -89,10 +88,29 @@ const Register = () => {
       }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    try {
+      const allUsersResponse = await directus.items("user").readByQuery({ sort: ['id'] })
+      console.log('alluser',allUsersResponse)
+    
+      const existingEmail = allUsersResponse.data.some(user => user.email === formData.email);
+      const existingUsername = allUsersResponse.data.some(user => user.username === formData.username);
+    
+      if (existingEmail) {
+        newErrors.email = "กรุณาใช้อีเมลอื่น เนื่องจากอีเมลนี้ถูกลงทะเบียนแล้ว";
+      }
+    
+      if (existingUsername) {
+        newErrors.username = "กรุณาเปลี่ยนชื่อผู้ใช้งานอื่น เนื่องจากมีในระบบแล้ว";
+      }
+    
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        setIsRegisterProfileOpen(false);
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking email and username:", error);
       setIsRegisterProfileOpen(false);
-      return;
     }
   };
 

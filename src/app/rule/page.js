@@ -1,4 +1,4 @@
-import Rulepage from "@/components/Blogs/RulePage"
+import Rulepage from "@/components/Blogs/Rulepage"
 const Rule = () => {
     return (
         <Rulepage />

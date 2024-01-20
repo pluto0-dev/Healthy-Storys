@@ -1,15 +1,30 @@
-"use client";
 // components/PopUp.js
-
+'use client'
 import React, { useEffect, useState } from "react";
 import { Directus } from "@directus/sdk";
+import Cookies from "js-cookie";
 
 const PopUp = () => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [motivation, setMotivation] = useState("");
   const directus = new Directus("http://localhost:8055");
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const closePopUpHandler = () => setShowPopUp(false);
+  const authToken = Cookies.get("token");
+
+  useEffect(() => {
+    const logging = () => {
+      try {
+        // Check if the authToken exists in cookies
+        const isLoggedIn = !!authToken;
+        setIsLoggedIn(isLoggedIn);
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    logging();
+  }, [authToken]);
 
   useEffect(() => {
     const fetchMotivation = async () => {
@@ -44,15 +59,15 @@ const PopUp = () => {
     return () => {
       clearInterval(timer);
     };
-  }, [directus]);
+  }, [directus, isLoggedIn]);
 
   return (
     <>
-      {showPopUp && (
-        <div className="fixed right-0 top-0 m-4">
-          <dialog id="my_modal_2" className="modal">
-            <div className="modal-box bg-cyan-700 text-gray-200 drop-shadow-md relative ">
-              <p className="py-4 text-2xl flex justify-center">🎉{motivation}🎉</p>
+      {showPopUp && isLoggedIn && (
+        <dialog id="my_modal_2" className="modal">
+          <div className="modal-box bg-[#FFB55F] text-black drop-shadow-md absolute end-5 mr-16 bottom-64">
+            <p className="py-4 text-3xl flex justify-center w-full h-full p-5">🎉{motivation}🎉</p>
+            <div className=" modal-backdrop">
               <button
                 className="text-gray-200 absolute top-3 right-4 text-xl"
                 onClick={closePopUpHandler}
@@ -60,8 +75,8 @@ const PopUp = () => {
                 x
               </button>
             </div>
-          </dialog>
-        </div>
+          </div>
+        </dialog>
       )}
     </>
   );

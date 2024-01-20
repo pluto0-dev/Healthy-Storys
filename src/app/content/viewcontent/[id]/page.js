@@ -55,7 +55,7 @@ const VideoPlayer = ({ params }) => {
                <h1 className="font-bold text-3xl ">{content.title}</h1>
               </div>
                 
-                <div className="mt-5 bg-white px-5 py-2 w-[600px] h-[590px] rounded-3xl drop-shadow-lg overflow-x-auto" >
+                <div className="mt-5 bg-white px-5 py-2 w-[600px] h-[300px] rounded-3xl drop-shadow-lg overflow-x-auto" >
                   <p >{content.description}</p>
                 </div>
                 
