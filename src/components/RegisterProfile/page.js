@@ -468,14 +468,14 @@ const RegisterProfile = ({
     setDropdownOpen(false);
   };
   const handleInputChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value,} = e.target;
   
     if (name === "age") {
       const currentValue = parseFloat(value);
       if (e.key === '.' || e.key === '-' || currentValue < 0 || e.key === 'e') {
         e.preventDefault();
       } else {
-          setUser((prevUser) => ({ ...prevUser, [name]: value }));
+        setFormDataModal((prevUser) => ({ ...prevUser, [name]: value }));
       }
     } else if (name === "weight" || name === "height") {
       const currentValue = parseFloat(value);
@@ -483,17 +483,18 @@ const RegisterProfile = ({
         e.preventDefault();
       } else {
         const newValue = value.replace(/[^0-9]/g, '');
-        setUser((prevUser) => ({ ...prevUser, [name]: value}));
+        setFormDataModal((prevUser) => ({ ...prevUser, [name]: value}));
       }
   
     } else {
-      if (type === "radio") {
-        setUser((prevUser) => ({ ...prevUser, [name]: value }));
-      } else {
-        setUser((prevUser) => ({ ...prevUser, [name]: type === 'file' ? files[0] : value }));
-      }
+      setFormDataModal((prevData) => ({
+                ...prevData,
+                [name]: value,
+              }));
     }
   };
+  
+      
   const closeModal = () => {
     onClose(); // Use the provided onClose callback to close the modal
   };
@@ -508,8 +509,8 @@ const RegisterProfile = ({
     // Validate the age before submitting the form
     if (
       formDataModal.age < 15 ||
-      formDataModal.age > 50 ||
-      !Number.isInteger(formDataModal.age)
+      formDataModal.age > 80 || // Corrected to check against 80
+      !Number.isInteger(parseFloat(formDataModal.age)) // Check if it's a valid integer or can be converted to one
     ) {
       // Display an alert for invalid age
       alert('ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80 ');
@@ -533,7 +534,7 @@ const RegisterProfile = ({
   
       console.log('User registered successfully:', response);
   
-      alert('Registration successful!');
+      alert('ทำการลงทะเบียนสำเร็จ');
       router.push('/login');
     } catch (error) {
       console.error('Error registering user:', error);
@@ -560,9 +561,9 @@ const RegisterProfile = ({
         frequency: "",
       });
 
-      console.log("User registered successfully:", response);
+     // console.log("ทำการลงทะเบียนสำเร็จ", response);
 
-      alert("Registration successful!");
+      alert("ทำการลงทะเบียนสำเร็จ");
       router.push("/login");
     } catch (error) {
       console.error("Error registering user:", error);
@@ -596,7 +597,8 @@ const RegisterProfile = ({
                     name="age"
                     value={formData.age}
                     onChange={handleInputChange}
-                    onKeyDown={handleInputChange}
+                onKeyDown={handleInputChange}
+                min="0"
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกอายุ"
                   />
@@ -645,7 +647,8 @@ const RegisterProfile = ({
                     name="height"
                     value={formData.height}
                     onChange={handleInputChange}
-                    onKeyDown={handleInputChange}
+               onKeyDown={handleInputChange}
+               min="0"
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกความสูง"
                   />
@@ -665,7 +668,8 @@ const RegisterProfile = ({
                     name="weight"
                     value={formData.weight}
                     onChange={handleInputChange}
-                    onKeyDown={handleInputChange}
+               onKeyDown={handleInputChange}
+               min="0"
                     className="mr-16 w-[485px]  px-5 py-2.5 bg-zinc-100 rounded-[10px] focus:outline-none focus:ring focus:border-green-600"
                     placeholder="กรุณากรอกน้ำหนัก"
                   />

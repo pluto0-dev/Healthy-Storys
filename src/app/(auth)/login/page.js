@@ -41,7 +41,7 @@ const Login = () => {
         Cookies.set("token", user.id, { expires: 1 }); // Adjust expiration as needed
 
         console.log("User logged in successfully:", user);
-        alert("Login successful!");
+        alert("เข้าสู่ระบบสำเร็จ");
         
         router.push("/");
         setTimeout(() => {

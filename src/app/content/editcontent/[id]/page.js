@@ -49,7 +49,7 @@ const EditContent = ({ params }) => {
             },
           ]);
 
-          console.log(contentResponse);
+          //console.log(contentResponse);
         }
       } catch (error) {
         console.error("Error fetching content:", error);

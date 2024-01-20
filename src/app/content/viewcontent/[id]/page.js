@@ -51,11 +51,11 @@ const VideoPlayer = ({ params }) => {
           <div className="ml-10 mt-5">
             {content && (
               <>
-              <div className="bg-white px-5 py-2 rounded-3xl drop-shadow-lg ">
+              <div className="bg-white px-5 py-2 rounded-3xl drop-shadow-lg w-[600px]">
                <h1 className="font-bold text-3xl ">{content.title}</h1>
               </div>
                 
-                <div className="mt-5 bg-white px-5 py-2 w-[600px] h-[300px] rounded-3xl drop-shadow-lg overflow-x-auto" >
+                <div className="mt-5 bg-white px-5 py-6 text-lg w-[600px] h-[300px] rounded-3xl drop-shadow-lg overflow-x-auto " >
                   <p >{content.description}</p>
                 </div>
                 

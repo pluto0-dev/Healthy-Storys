@@ -29,8 +29,11 @@ const CreateBlog = () => {
       });
   
       console.log("Data sent to Directus:", blogResponse);
-  
+      alert("สร้างบล็อคสำเร็จ")
       router.push(`/myblog/${Cookies.get("token")}`);
+      setTimeout(() => {
+        window.location.reload();
+    }, 200);
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }

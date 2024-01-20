@@ -97,7 +97,7 @@ const Profile = () => {
         }, 250);
         const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
         setUser(updatedUser);
-        alert("User profile updated successfully");
+        alert("โปรไฟล์ของผู้ใช้ได้รับการอัปเดตเรียบร้อยแล้ว!");
       } catch (error) {
         console.error('Error updating user profile:', error.message);
       }

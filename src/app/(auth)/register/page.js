@@ -84,7 +84,7 @@ const Register = () => {
           key === "confirmPassword" ? "confirm password" : key
         }.`;
       } else if (isSpecialCharacter(value)) {
-        newErrors[key] = `Special characters are not allowed in ${key}.`;
+        newErrors[key] = `ไม่อนุญาตให้ใช้ตัวอักษรพิเศษใน ${key}.`;
       }
     });
 

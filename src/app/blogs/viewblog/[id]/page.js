@@ -115,10 +115,10 @@ const Blogs = ({ params }) => {
                 <img src={`${assetsUrl}/${content.preview}`} alt="imgvideo" className="bg-black bg-cover h-full w-96"/>
               </figure>
               <div className="card-body">
-                <h2 className="card-title font-bold text-xl text-black">
+                <h2 className="card-title font-bold text-xl text-black ">
                   {content.title}
                 </h2>
-                <p className="card-description text-black ">
+                <p className="card-description text-black w-[380px]">
                   {content.description}
                 </p>
               </div>

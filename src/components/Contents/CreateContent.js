@@ -20,19 +20,19 @@ const CreateContent = ({ params }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const userBlog = await directus.items("blog").readByQuery({
         filter: { user: authToken },
         limit: 1,
       });
-  
+
       // Check if both preview and video are selected
       if (!imageId || !videoId) {
         alert("กรุณาเลือกรูปภาพและวิดีโอก่อนที่จะส่ง");
         return;
       }
-  
+
       const contentData = {
         blog: userBlog.data[0].id,
         title: formData.videoClipName,
@@ -40,12 +40,14 @@ const CreateContent = ({ params }) => {
         preview: imageId,
         video: videoId,
       };
-  
-      const createdContent = await directus.items("content").createOne(contentData);
-  
-      console.log("Content created successfully:", createdContent);
-  
-      alert("Content created successfully");
+
+      const createdContent = await directus
+        .items("content")
+        .createOne(contentData);
+
+      //console.log("Content created successfully:", createdContent);
+
+      alert("เนื้อหาได้ถูกสร้างขึ้นเรียบร้อยแล้ว!");
       router.push(`/myblog/${Cookies.get("token")}`);
       setFormData({
         videoClipName: "",
@@ -55,25 +57,22 @@ const CreateContent = ({ params }) => {
       console.error("Error creating content:", error);
     }
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-  
+
     // Check if the input is the description and limit it to 255 characters
-    const newValue =
-      name === "details" ? value.slice(0, 255) : value;
-  
+    const newValue = name === "details" ? value.slice(0, 255) : value;
+
     setFormData((prevUser) => ({
       ...prevUser,
       [name]: type === "file" ? files[0] : newValue,
     }));
   };
-  
 
   const handleImageChange = async (e) => {
     const { name, files, type } = e.target;
-  
+
     if (name === "preview" && files.length > 0) {
       const imageFile = files[0];
       const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
@@ -85,7 +84,7 @@ const CreateContent = ({ params }) => {
         setIsHaveimage(true);
         setImageFilePreviews([{ type: "image", file: imageFile }]);
         const fileUploadResponse = await uploadImage(imageFile);
-        console.log('file upload', fileUploadResponse);
+        console.log("file upload", fileUploadResponse);
       }
     } else {
       setIsHavefile(false);
@@ -104,9 +103,9 @@ const CreateContent = ({ params }) => {
         setIsHavefile(true);
         setVideoFilePreviews([{ type: fileType, file }]);
         const fileUploadResponse = await uploadVideo(file);
-        console.log('file upload', fileUploadResponse);
+        console.log("file upload", fileUploadResponse);
       } else {
-        alert("กรุณาใส่วิดีโอเท่านั้น")
+        alert("กรุณาใส่วิดีโอเท่านั้น");
       }
     } else {
       setIsHavefile(false);
@@ -114,7 +113,7 @@ const CreateContent = ({ params }) => {
   };
 
   const [imageId, setImageId] = useState();
-  const appId = authToken
+  const appId = authToken;
 
   const uploadImage = async (file) => {
     try {
@@ -166,7 +165,6 @@ const CreateContent = ({ params }) => {
     }
   };
 
-
   return (
     <form onSubmit={handleFormSubmit}>
       <div className="flex justify-end mr-[300px] mt-16">
@@ -177,58 +175,57 @@ const CreateContent = ({ params }) => {
 
       <div className="mt-2">
         <div className="inline-flex items-center mx-[260px]">
-
-          
-        <div className="items-center justify-center mx-5">
-  <label
-    htmlFor="dropzone-image"
-    className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde relative overflow-hidden"
-  >
-    <div className="absolute top-0 left-0 w-full h-full">
-      {isHaveImage ? (
-        <>
-          {imageFilePreviews.map((preview, index) => (
-           <div>
-  <img
-              key={index}
-              src={URL.createObjectURL(preview.file)}
-              alt={`Image Preview ${index + 1}`}
-              className="w-full h-full object-cover opacity-50"
-            />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10">
-               <p className=" mb-2 text-center text-white text-5xl font-normal">
-            <span className="font-semibold">แก้ไขรูปภาพ</span>
-          </p>
-          <p className="text-center text-white text-xl font-normal">
-            <span className="font-semibold">หรือลากและวาง</span>
-          </p>
-            </div>
-           
-           </div>
-          
-          ))}
-          
-        </>
-      ) : (
-        <>
-          <p className=" mt-44 mb-2 text-center text-neutral-500 text-5xl font-normal">
-            <span className="font-semibold">เพิ่มรูปภาพ</span>
-          </p>
-          <p className="text-center text-neutral-500 text-xl font-normal">
-            <span className="font-semibold">หรือลากและวาง</span>
-          </p>
-        </>
-      )}
-    </div>
-    <input
-      id="dropzone-image"
-      name="preview"
-      type="file"
-      className="hidden"
-      onChange={handleImageChange}
-    />
-  </label>
-</div>
+          <div className="items-center justify-center mx-5">
+            <label
+              htmlFor="dropzone-image"
+              className="flex flex-col items-center justify-center w-[547px] h-[433px] rounded-[20px] border-gray-400 border-4 cursor-pointer bg-zinc-300 hover:bg-gray-400 rounde relative overflow-hidden"
+              >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <div className="absolute top-0 left-0 w-full h-full">
+                  {isHaveImage ? (
+                    <>
+                      {imageFilePreviews.map((preview, index) => (
+                        <div>
+                          <img
+                            key={index}
+                            src={URL.createObjectURL(preview.file)}
+                            alt={`Image Preview ${index + 1}`}
+                            className="w-full h-full object-cover opacity-50"
+                          />
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10">
+                            <p className=" mb-2 text-center text-neutral-500 text-5xl font-normal">
+                              <span className="font-semibold">แก้ไขรูปภาพ</span>
+                            </p>
+                            <p className="text-center text-neutral-500 text-xl font-normal">
+                              <span className="font-semibold">
+                                หรือลากและวาง
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      <p className=" mt-44 mb-2 text-center text-neutral-500 text-5xl font-normal">
+                        <span className="font-semibold">เพิ่มรูปภาพ</span>
+                      </p>
+                      <p className="text-center text-neutral-500 text-xl font-normal">
+                        <span className="font-semibold">หรือลากและวาง</span>
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+              <input
+                id="dropzone-image"
+                name="preview"
+                type="file"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
           <div className="items-center justify-center w-full">
             <label
               htmlFor="dropzone-video"
@@ -249,13 +246,13 @@ const CreateContent = ({ params }) => {
                           />
                         )}
                         <div className="absolute ml-44 top-[400px]">
-                        <p className=" mb-2 text-center text-neutral-800 text-5xl font-normal">
-            <span className="font-semibold">แก้ไขวิดีโอ</span>
-          </p>
-          <p className="text-center text-neutral-800 text-xl font-normal">
-            <span className="font-semibold">หรือลากและวาง</span>
-          </p>
-            </div>
+                          <p className=" mb-2 text-center text-neutral-800 text-5xl font-normal">
+                            <span className="font-semibold">แก้ไขวิดีโอ</span>
+                          </p>
+                          <p className="text-center text-neutral-800 text-xl font-normal">
+                            <span className="font-semibold">หรือลากและวาง</span>
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </>
@@ -302,7 +299,6 @@ const CreateContent = ({ params }) => {
             type="text"
             placeholder="อธิบายรายละเอียดคลิปวิดีโอของคุณ"
             className="input w-[850px] h-[134px] px-5 py-2.5 bg-white rounded-[10px] border border-zinc-300 justify-start items-center gap-2.5 inline-flex"
-           
             name="details"
             value={formData.details}
             onChange={handleInputChange}

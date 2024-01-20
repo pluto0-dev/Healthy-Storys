@@ -223,7 +223,7 @@ const myBlogs = ({ params }) => {
                   />
                 </figure>
                 <div className="card-body">
-                  <h2 className="card-title font-bold text-xl text-black">
+                  <h2 className="card-title font-bold text-xl text-black w-[380px]">
                     {content.title}
                   </h2>
                 </div>

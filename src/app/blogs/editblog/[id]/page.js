@@ -53,7 +53,7 @@ const editblog = ({ params }) => {
       };
       await directus.items("blog").updateOne(params.id, updatedData);
 
-      alert("Blog post updated successfully!");
+      alert("บทความได้รับการอัปเดตเรียบร้อยแล้ว!");
       //console.log(updatedData)
       router.push(`/myblog/${Cookies.get("token")}`);
 
@@ -128,7 +128,7 @@ const editblog = ({ params }) => {
         },
       });
 
-      console.log("File upload response:", fileUploadResponse);
+      ฝconsole.log("File upload response:", fileUploadResponse);
 
       setFileId(fileUploadResponse.id);
       return fileUploadResponse.id;
