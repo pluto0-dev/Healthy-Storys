@@ -40,7 +40,7 @@ const Login = () => {
         const user = users.data[0];
         Cookies.set("token", user.id, { expires: 1 }); // Adjust expiration as needed
 
-        console.log("User logged in successfully:", user);
+        //console.log("User logged in successfully:", user);
         alert("เข้าสู่ระบบสำเร็จ");
         
         router.push("/");
@@ -73,13 +73,13 @@ const Login = () => {
           onSubmit={handleSubmit}
         >
           <div className="form-control">
-            <h1 className="mt-1 text-black font-bold text-5xl">Hello!</h1>
-            <h2 className="text-black text-lg mt-10">Welcome Back</h2>
+            <h1 className="mt-1 text-black font-bold text-5xl">สวัสดี!</h1>
+            <h2 className="text-black text-lg mt-10">ยินดีต้อนรับกลับมา</h2>
 
             <div className="input-box my-2">
               <input
                 type="text"
-                placeholder="Enter your email"
+                placeholder="อีเมล"
                 className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                 required
                 name="email"
@@ -91,7 +91,7 @@ const Login = () => {
             <div className="input-box my-2">
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder="รหัสผ่าน"
                 className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                 required
                 name="password"
@@ -104,7 +104,7 @@ const Login = () => {
 
             <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
               <button type="submit" className="w-11/12" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? "กำลังล็อกอิน..." : "ล็อกอิน"}
               </button>
             </div>
           </div>

@@ -291,10 +291,10 @@ const Profile = () => {
               >
                 <option value="">กรุณาเลือกความถี่ในการออกกำลังกาย</option>
                 <option value="1">ไม่ออกกำลังกาย</option>
-                <option value="2">1-3 วัน/สัปดาห์</option>
-                <option value="3">4-5 วัน/สัปดาห์</option>
+                <option value="2">ออกกำลังกาย 1-3 วัน/สัปดาห์</option>
+                <option value="3">ออกกำลังกาย 4-5 วัน/สัปดาห์</option>
                 <option value="4">
-                6-7 วัา/สัปดาห์
+                ออกกำลังกาย 6-7 วัน/สัปดาห์
                 </option>
                 <option value="5">
                 ออกกำลังกายทุกวันเช้า/เย็น

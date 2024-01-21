@@ -151,7 +151,7 @@ const Register = () => {
               <div className="input-box my-2">
                 <input
                   type="text"
-                  placeholder="Enter your email"
+                  placeholder="อีเมล"
                   className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                   required
                   id="email"
@@ -167,7 +167,7 @@ const Register = () => {
               <div className="input-box my-2">
                 <input
                   type="text"
-                  placeholder="Enter your username"
+                  placeholder="ชื่อผู้ใช้งาน"
                   className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                   required
                   id="username"
@@ -183,7 +183,7 @@ const Register = () => {
               <div className="input-box my-2">
                 <input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="รหัสผ่าน"
                   className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                   required
                   id="password"
@@ -199,7 +199,7 @@ const Register = () => {
               <div className="input-box my-2">
                 <input
                   type="password"
-                  placeholder="Enter your confirm password"
+                  placeholder="ยืนยันรหัสผ่าน"
                   className="input input-bordered w-full max-w-xs bg-[#cbd7ce] placeholder-[#587F61] text-[#587F61]"
                   required
                   id="confirmPassword"
@@ -213,7 +213,7 @@ const Register = () => {
               </div>
 
               <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
-                <input type="submit" value="Register" className="w-11/12" />
+                <input type="submit" value="ลงทะเบียน" className="w-11/12" />
               </div>
             </div>
           </form>

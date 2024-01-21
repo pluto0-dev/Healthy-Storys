@@ -8,8 +8,17 @@ import { faUtensils } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 const Calorie = () => {
   const router = useRouter();
+  const token = Cookies.get("token");
+  // useEffect(() => {
+  //   if (!token) {
+  //     alert("Please login first");
+  //     router.push("/login");
+  //   }
+  // }, [token, router]);
+
   const directus = new Directus("http://localhost:8055");
   const userID = Cookies.get("token");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDataNull, setIsDataNull] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -49,7 +58,14 @@ const Calorie = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
-    setIsModalOpen(true);
+    if (!token) {
+      alert("กรุณาเข้าสู่ระบบก่อน");
+      router.push("/login");
+      setIsModalOpen(false);
+    }else{
+      setIsModalOpen(true);
+    }
+    
   };
 
   const closeModal = () => {
@@ -83,9 +99,9 @@ const Calorie = () => {
     let tdee;
     const roundedBMR = Math.round(bmr);
     const multiplier = FREQUENCY_MULTIPLIERS[frequency];
-    console.log(roundedBMR)
-    console.log(multiplier)
-    console.log(Math.round(roundedBMR * multiplier))
+    // console.log(roundedBMR)
+    // console.log(multiplier)
+    // console.log(Math.round(roundedBMR * multiplier))
     tdee = roundedBMR * multiplier;
     return tdee;
   };
@@ -163,6 +179,8 @@ const gotoEditData = () => {
   closeModal();
   router.push(`/profile/${Cookies.get("token")}}`)
 }
+
+
   const handleCalculate = () => {
     if (validateUserData()) {
       calculateValues();
@@ -189,7 +207,51 @@ const gotoEditData = () => {
       calculateValues();
     }
   }, [userData, breakfastInput, lunchInput, dinnerInput]);
-
+  // const handleInputChange = (e, setInputFunction) => {
+  //   const inputValue = e.target.value;
+  
+  //   // Check if the input value contains 'e'
+  //   if (!inputValue.includes('e')) {
+  //     // Remove any occurrences of '-' in the input value
+  //     const sanitizedInput = inputValue.replace(/-/g, '');
+  
+  //     // Check if the sanitized input is a valid number
+  //     if (!isNaN(sanitizedInput)) {
+  //       setInputFunction(sanitizedInput);
+  //     }
+  //   }
+  // };
+  // const handleInputChange = (e, setInputFunction) => {
+  //   // ตรวจสอบว่าปุ่มที่ถูกกดคือ '-' หรือ 'e'
+  //   if (e.target.value.includes('-') || e.target.value.toLowerCase().includes('e')) {
+  //     // ไม่อนุญาตให้พิมพ์เครื่องหมายลบหรือตัว 'e' เข้า Input
+  //     e.preventDefault();
+  //   } else {
+  //     const inputValue = e.target.value;
+  
+  //     // ตรวจสอบว่า input ที่ผู้ใช้พิมพ์เข้ามาไม่มีเครื่องหมายลบ
+  //     const sanitizedInput = inputValue.replace(/-/g, '');
+  
+  //     // ตรวจสอบว่า sanitizedInput เป็นตัวเลขที่ถูกต้อง
+  //     if (!isNaN(sanitizedInput)) {
+  //       setInputFunction(sanitizedInput);
+  //     }
+  //   }
+  // };
+  const handleInputChange = (e, setInputFunction) => {
+    const inputValue = e.target.value;
+  
+    // ตรวจสอบว่า input ที่ผู้ใช้พิมพ์เข้ามาไม่มีเครื่องหมายลบหน้าหรือหลังตัวเลข
+    const sanitizedInput = inputValue.replace(/^-|\.$/g, '');
+  
+    // ตรวจสอบว่า sanitizedInput เป็นตัวเลขที่ถูกต้อง
+    if (!isNaN(sanitizedInput)) {
+      setInputFunction(sanitizedInput);
+    } else {
+      // ถ้า sanitizedInput ไม่เป็นตัวเลขที่ถูกต้อง กำหนดค่าเดิม
+      setInputFunction('');
+    }
+  };
   return (
     <>
       <button
@@ -235,7 +297,8 @@ const gotoEditData = () => {
                       placeholder=" กรุณากรอกแคลอรี่ของคุณ"
                       className="text-[#8FA995] text-2xl font-normal font-['Inter'] w-full outline-none bg-transparent placeholder-[#8FA995]::placeholder"
                       value={breakfastInput}
-                      onChange={(e) => setBreakfastInput(e.target.value)}
+                      min={0}
+                      onChange={(e) => handleInputChange(e, setBreakfastInput)}
                     />
                   </div>
                 </div>
@@ -253,7 +316,8 @@ const gotoEditData = () => {
                       placeholder=" กรุณากรอกแคลอรี่ของคุณ"
                       className="text-[#8FA995] text-2xl font-normal font-['Inter'] w-full outline-none bg-transparent placeholder-green-500::placeholder"
                       value={lunchInput}
-                      onChange={(e) => setLunchInput(e.target.value)}
+                      min={0}
+                      onChange={(e) => handleInputChange(e, setLunchInput)}
                     />
                   </div>
                 </div>
@@ -271,7 +335,8 @@ const gotoEditData = () => {
                       placeholder=" กรุณากรอกแคลอรี่ของคุณ"
                       className="text-[#8FA995] text-2xl font-normal font-['Inter'] w-full outline-none bg-transparent placeholder-green-500::placeholder"
                       value={dinnerInput}
-                      onChange={(e) => setDinnerInput(e.target.value)}
+                      min={0}
+                      onChange={(e) => handleInputChange(e, setDinnerInput)}
                     />
                   </div>
                 </div>
@@ -302,7 +367,7 @@ const gotoEditData = () => {
                         ยกเลิก
                       </button>
                       <button className="bg-[#587F61] text-white px-4 py-2 rounded-md mr-2" onClick={gotoEditData}>
-                        <div className=" inline-flex items-center justify-center  mt-2">
+                        <div className=" inline-flex items-center justify-center ">
                           คลิกที่นี้เพื่อไปกรอกข้อมูล
                         </div>
                       </button>

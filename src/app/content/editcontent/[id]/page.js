@@ -70,8 +70,8 @@ const EditContent = ({ params }) => {
         video: videoId,
       });
 
-      console.log("Content updated successfully:", response);
-      alert("Content updated successfully");
+      //console.log("Content updated successfully:", response);
+      alert("เนื้อหาได้รับการอัปเดตเรียบร้อยแล้ว");
       router.push(`/myblog/${Cookies.get("token")}`);
     } catch (error) {
       console.error("Error updating content:", error);
@@ -144,7 +144,7 @@ const EditContent = ({ params }) => {
         },
       });
 
-      console.log("File upload response:", fileUploadResponse);
+      //console.log("File upload response:", fileUploadResponse);
 
       setImageId(fileUploadResponse.id);
       return fileUploadResponse.id;
@@ -169,7 +169,7 @@ const EditContent = ({ params }) => {
         },
       });
 
-      console.log("File upload response:", fileUploadResponse);
+      //console.log("File upload response:", fileUploadResponse);
 
       setVideoId(fileUploadResponse.id);
       return fileUploadResponse.id;

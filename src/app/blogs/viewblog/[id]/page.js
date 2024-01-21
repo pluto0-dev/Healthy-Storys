@@ -80,12 +80,13 @@ const Blogs = ({ params }) => {
   return (
     <>
       <div
-        className="flex items-center justify-center bg-white h-[640px]"
+        className="flex items-center justify-center bg-white h-[640px] mt-[75px]"
         style={{
           backgroundImage: `url('${assetsUrl}/${blogs[0]?.banner}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "200px",
+          
         }}
       >
         <div className="absolute left-0 mx-10 mt-[400px]">
@@ -112,10 +113,10 @@ const Blogs = ({ params }) => {
               className="card card-side w-[860px] h-[350px] bg-white shadow-xl  my-2"
             >
               <figure>
-                <img src={`${assetsUrl}/${content.preview}`} alt="imgvideo" className="bg-black bg-cover h-full w-96"/>
+                <img src={`${assetsUrl}/${content.preview}`} alt="imgvideo" className="bg-black bg-cover h-full w-[380px] mb-2"/>
               </figure>
               <div className="card-body">
-                <h2 className="card-title font-bold text-xl text-black ">
+                <h2 className="card-title font-bold text-xl text-black w-[380px]">
                   {content.title}
                 </h2>
                 <p className="card-description text-black w-[380px]">

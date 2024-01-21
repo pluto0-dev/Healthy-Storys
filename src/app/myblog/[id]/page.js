@@ -170,7 +170,7 @@ const myBlogs = ({ params }) => {
   return (
     <>
       <div
-        className="flex items-center justify-center bg-white h-[640px]"
+        className="flex items-center justify-center bg-white h-[640px] mt-[75px]"
         style={{
           backgroundImage: `url('${assetsUrl}/${blogs[0]?.banner}')`,
           backgroundSize: "cover",
@@ -218,7 +218,7 @@ const myBlogs = ({ params }) => {
                 <figure>
                   <img
                     src={`${assetsUrl}/${content.preview}`}
-                    className="bg-cover h-full w-96 mb-2"
+                    className="bg-cover h-full w-[380px] mb-2"
                     alt="imgvideo"
                   />
                 </figure>
