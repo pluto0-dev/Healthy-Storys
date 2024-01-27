@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Directus } from "@directus/sdk";
 import Cookies from "js-cookie";
-
+import Swal from "sweetalert2";
 
 const directus = new Directus("http://localhost:8055/");
 
@@ -28,12 +28,22 @@ const CreateBlog = () => {
         description: formData.description,
       });
   
-      console.log("Data sent to Directus:", blogResponse);
-      alert("สร้างบล็อคสำเร็จ")
-      router.push(`/myblog/${Cookies.get("token")}`);
+      //console.log("Data sent to Directus:", blogResponse);
+      //alert("สร้างบล็อคสำเร็จ")
+
+      Swal.fire({
+        title: 'สร้างบล็อคสำเร็จ',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      }).then(()=>{
+        router.push(`/myblog/${Cookies.get("token")}`);
+    }).then(() => {
       setTimeout(() => {
-        window.location.reload();
-    }, 200);
+          window.location.reload();
+      }, 100);
+    })
+      //router.push(`/myblog/${Cookies.get("token")}`);
     } catch (error) {
       console.error("Error sending data to Directus:", error);
     }

@@ -2,7 +2,7 @@
 import { Directus } from "@directus/sdk";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-
+import Swal from "sweetalert2";
 const Profile = () => {
   const directus = new Directus("http://localhost:8055");
   const assetsUrl = "http://localhost:8055/assets";
@@ -63,7 +63,13 @@ const Profile = () => {
     const userId = Cookies.get("token");
   
     if (user.age < 15 || user.age > 80) {
-      alert("ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80");
+      //alert("ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80");
+      Swal.fire({
+        title: 'ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      })
     } else {
       try {
         // Check if the username has been changed
@@ -76,14 +82,26 @@ const Profile = () => {
           const existingUsername = allUsersResponse.data.some(existingUser => existingUser.username === user.username);
   
           if (existingUsername) {
-            alert("กรุณาเปลี่ยนชื่อผู้ใช้งานอื่น เนื่องจากมีในระบบแล้ว");
+            //alert("กรุณาเปลี่ยนชื่อผู้ใช้งานอื่น เนื่องจากมีในระบบแล้ว");
+            Swal.fire({
+              title: 'กรุณาเปลี่ยนชื่อผู้ใช้งานอื่น เนื่องจากมีในระบบแล้ว',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              confirmButtonColor:"#587F61"
+            })
             return; // Stop the submission if the username already exists
           }
         }
   
         // Check if the username length exceeds 50 characters
         if (user.username.length > 50) {
-          alert("ชื่อผู้ใช้งานต้องไม่เกิน 50 ตัวอักษร");
+          //alert("ชื่อผู้ใช้งานต้องไม่เกิน 50 ตัวอักษร");
+          Swal.fire({
+            title: 'ชื่อผู้ใช้งานต้องไม่เกิน 50 ตัวอักษร',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor:"#587F61"
+          })
           return;
         }
   
@@ -92,12 +110,19 @@ const Profile = () => {
           ...user,
           image_profile: fileId,
         };
-        setTimeout(() => {
-          window.location.reload();
-        }, 250);
+        
         const updatedUser = await directus.items('user').updateOne(userId, updatedUserData);
         setUser(updatedUser);
-        alert("โปรไฟล์ของผู้ใช้ได้รับการอัปเดตเรียบร้อยแล้ว!");
+        //alert("โปรไฟล์ของผู้ใช้ได้รับการอัปเดตเรียบร้อยแล้ว!");
+        Swal.fire({
+          title: 'โปรไฟล์ของผู้ใช้ได้รับการอัปเดตเรียบร้อยแล้ว!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        }).then(()=>{        
+          window.location.reload();
+        })
+        
       } catch (error) {
         console.error('Error updating user profile:', error.message);
       }
@@ -114,7 +139,15 @@ const Profile = () => {
       const imageFile = files[0];
       const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!allowedImageTypes.includes(imageFile.type)) {
-        alert("กรุณาใส่รูปภาพเท่านั้น");
+        //alert("กรุณาใส่รูปภาพเท่านั้น");
+        Swal.fire({
+          title: 'กรุณาใส่รูปภาพเท่านั้น',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        }).then(() => {
+          window.location.reload();
+        })
         return; // Do not proceed with the image upload
       } else {
         setUser((prevData) => ({ ...prevData, profile: imageFile.name }));

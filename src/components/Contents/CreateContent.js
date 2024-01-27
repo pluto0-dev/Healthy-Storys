@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Directus } from "@directus/sdk";
 import Cookies from "js-cookie";
-
+import Swal from "sweetalert2";
 const authToken = Cookies.get("token");
 const directus = new Directus("http://localhost:8055/");
 
@@ -47,8 +47,16 @@ const CreateContent = ({ params }) => {
 
       //console.log("Content created successfully:", createdContent);
 
-      alert("เนื้อหาได้ถูกสร้างขึ้นเรียบร้อยแล้ว!");
-      router.push(`/myblog/${Cookies.get("token")}`);
+      //alert("เนื้อหาได้ถูกสร้างขึ้นเรียบร้อยแล้ว!");
+      Swal.fire({
+        title: 'เนื้อหาได้ถูกสร้างขึ้นเรียบร้อยแล้ว!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      }).then(() => {
+        router.push(`/myblog/${Cookies.get("token")}`);
+      })
+      
       setFormData({
         videoClipName: "",
         details: "",
@@ -77,7 +85,12 @@ const CreateContent = ({ params }) => {
       const imageFile = files[0];
       const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!allowedImageTypes.includes(imageFile.type)) {
-        alert("กรุณาใส่รูปภาพเท่านั้น");
+        Swal.fire({
+          title: 'กรุณาใส่รูปภาพเท่านั้น',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        })
         return; // Do not proceed with the image upload
       } else {
         setFormData((prevData) => ({ ...prevData, preview: imageFile.name }));
@@ -105,7 +118,12 @@ const CreateContent = ({ params }) => {
         const fileUploadResponse = await uploadVideo(file);
         console.log("file upload", fileUploadResponse);
       } else {
-        alert("กรุณาใส่วิดีโอเท่านั้น");
+        Swal.fire({
+          title: 'กรุณาใส่วิดีโอเท่านั้น',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        })
       }
     } else {
       setIsHavefile(false);

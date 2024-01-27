@@ -364,7 +364,7 @@
 import { useState } from "react";
 import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
-
+import Swal from "sweetalert2";
 const RadioInput = ({ id, name, value, label, onChange }) => (
   <label htmlFor={id} className="flex items-center">
     <input
@@ -507,12 +507,18 @@ const RegisterProfile = ({
       !Number.isInteger(parseFloat(formDataModal.age)) // Check if it's a valid integer or can be converted to one
     ) {
       // Display an alert for invalid age
-      alert('ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80 ');
+      //alert('ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80 ');
+      Swal.fire({
+        title: 'ค่าอายุต้องอยู่อยู่ระหว่าง 15 ถึง 80 ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      })
       return;
     }
   
     // Perform actions with the collected data as needed
-    console.log('Form Data:', formDataModal);
+    //console.log('Form Data:', formDataModal);
   
     try {
       const response = await directus.items('user').createOne({
@@ -526,10 +532,18 @@ const RegisterProfile = ({
         frequency: formDataModal.frequency,
       });
   
-      console.log('User registered successfully:', response);
+      //console.log('User registered successfully:', response);
   
-      alert('ทำการลงทะเบียนสำเร็จ');
-      router.push('/login');
+      //alert('ทำการลงทะเบียนสำเร็จ');
+      Swal.fire({
+        title: 'ทำการลงทะเบียนสำเร็จ',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      }).then(()=>{
+         router.push('/login');
+      })
+     
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -557,8 +571,17 @@ const RegisterProfile = ({
 
      // console.log("ทำการลงทะเบียนสำเร็จ", response);
 
-      alert("ทำการลงทะเบียนสำเร็จ");
-      router.push("/login");
+      // alert("ทำการลงทะเบียนสำเร็จ");
+      // router.push("/login");
+      Swal.fire({
+        title: 'ทำการลงทะเบียนสำเร็จ',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      }).then(()=>{
+         router.push('/login');
+      })
+
     } catch (error) {
       console.error("Error registering user:", error);
     }

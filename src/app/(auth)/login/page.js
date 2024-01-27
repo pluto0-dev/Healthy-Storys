@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
-import 'react-toastify/dist/ReactToastify.css';
+import Swal from "sweetalert2";
 const directus = new Directus("http://localhost:8055/");
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -38,15 +38,22 @@ const Login = () => {
         Cookies.set("token", user.id, { expires: 1 }); // Adjust expiration as needed
 
         //console.log("User logged in successfully:", user);
-        alert("เข้าสู่ระบบสำเร็จ");
+        //alert("เข้าสู่ระบบสำเร็จ");
         // toast.success("เข้าสู่ระบบสำเร็จ", {
         //   position: "top-right",
         //   theme: "colored",
         // });
-        router.push("/");
-        setTimeout(() => {
-          window.location.reload();
-      }, 200);
+        Swal.fire({
+          title: 'เข้าสู่ระบบสำเร็จ',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        }).then(() => {
+          router.push("/");
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        });
         
         
         

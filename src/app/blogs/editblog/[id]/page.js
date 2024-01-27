@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 const editblog = ({ params }) => {
   const directus = new Directus("http://localhost:8055/");
   const assetsUrl = "http://localhost:8055/assets";
@@ -53,10 +54,21 @@ const editblog = ({ params }) => {
       };
       await directus.items("blog").updateOne(params.id, updatedData);
 
-      alert("บทความได้รับการอัปเดตเรียบร้อยแล้ว!");
-      //console.log(updatedData)
-      router.push(`/myblog/${Cookies.get("token")}`);
-
+      // alert("บทความได้รับการอัปเดตเรียบร้อยแล้ว!");
+      // //console.log(updatedData)
+      // router.push(`/myblog/${Cookies.get("token")}`);
+      Swal.fire({
+        title: 'บทความได้รับการอัปเดตเรียบร้อยแล้ว!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor:"#587F61"
+      }).then(()=>{
+        router.push(`/myblog/${Cookies.get("token")}`);
+    }).then(() => {
+      setTimeout(() => {
+          window.location.reload();
+      }, 100);
+    })
     } catch (error) {
       console.error("Error updating blog post:", error);
     }
@@ -87,7 +99,13 @@ const editblog = ({ params }) => {
       const imageFile = files[0];
       const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!allowedImageTypes.includes(imageFile.type)) {
-        alert("กรุณาใส่รูปภาพเท่านั้น");
+        //alert("กรุณาใส่รูปภาพเท่านั้น");
+        Swal.fire({
+          title: 'กรุณาใส่รูปภาพเท่านั้น',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor:"#587F61"
+        })
         return; // Do not proceed with the image upload
       } else {
         setFormData((prevData) => ({ ...prevData, bannerName: imageFile.name }));
