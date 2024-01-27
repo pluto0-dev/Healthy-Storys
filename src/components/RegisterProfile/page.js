@@ -449,6 +449,7 @@ const RegisterProfile = ({
       "4-5 ครั้ง/สัปดาห์": 3,
       ออกกำลังกายเป็นประจำทุกวัน: 4,
       ออกกำลังกายแบบเข้มข้น: 5,
+      
     };
 
     const frequencyValue = frequencyMapping[activity];

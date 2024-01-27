@@ -3,10 +3,8 @@ import { useState } from "react";
 import { Directus } from "@directus/sdk";
 import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie';
-
-
+import 'react-toastify/dist/ReactToastify.css';
 const directus = new Directus("http://localhost:8055/");
-
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -15,7 +13,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
   const handleChange = (e) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -26,7 +23,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    //setIsLoading(true);
 
     try {
       const users = await directus.items("user").readByQuery({
@@ -42,7 +39,10 @@ const Login = () => {
 
         //console.log("User logged in successfully:", user);
         alert("เข้าสู่ระบบสำเร็จ");
-        
+        // toast.success("เข้าสู่ระบบสำเร็จ", {
+        //   position: "top-right",
+        //   theme: "colored",
+        // });
         router.push("/");
         setTimeout(() => {
           window.location.reload();
@@ -57,13 +57,13 @@ const Login = () => {
     } catch (error) {
       console.error("Error logging in user:", error);
       setError("An error occurred while logging in. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
+    <>
     <div className="flex flex-col items-center justify-start h-screen mt-28">
+      
       <div className="card card-side bg-white shadow-md w-3/4 rounded-[60px]">
         <figure>
           <img src="/img.png" alt="workout" />
@@ -102,8 +102,8 @@ const Login = () => {
 
             {error && <p className="text-red-500">{error}</p>}
 
-            <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
-              <button type="submit" className="w-11/12" disabled={isLoading}>
+            <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2  text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
+              <button type="submit" className="btn btn-ghost h-full w-full" disabled={isLoading}>
                 {isLoading ? "กำลังล็อกอิน..." : "ล็อกอิน"}
               </button>
             </div>
@@ -111,6 +111,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

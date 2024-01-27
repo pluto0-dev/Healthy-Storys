@@ -16,7 +16,6 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-
   const [errors, setErrors] = useState({
     email: "",
     username: "",
@@ -212,8 +211,8 @@ const Register = () => {
                 )}
               </div>
 
-              <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 px-2 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
-                <input type="submit" value="ลงทะเบียน" className="w-11/12" />
+              <div className="flex w-11/12 justify-center rounded-md bg-[#587F61] my-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]">
+                <input type="submit" value="ลงทะเบียน" className="btn btn-ghost h-full w-full" />
               </div>
             </div>
           </form>

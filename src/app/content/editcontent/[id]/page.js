@@ -184,7 +184,7 @@ const EditContent = ({ params }) => {
       <form onSubmit={handleFormSubmit}>
         <div className="flex justify-end mr-[300px] mt-6">
           <div className="item-center justify-center w-[166px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex ">
-            <input type="Submit" value="อัพเดต" className="" />
+            <input type="Submit" value="อัพเดต" className="btn btn-ghost h-full w-full" />
           </div>
         </div>
 

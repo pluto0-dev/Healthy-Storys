@@ -142,8 +142,8 @@ const editblog = ({ params }) => {
     <>
       <form onSubmit={handleFormSubmit}>
       <div className="flex justify-end mr-[300px] mt-16 ">
-        <div className="item-center justify-center w-[155px] h-[60px] rounded-md bg-[#587F61] text-white text-2xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
-          <input type="submit" value="อัพเดตบล็อก" className="" />
+        <div className="item-center justify-center w-[155px] h-[60px] rounded-md bg-[#587F61] text-white  font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
+          <input type="submit" value="อัพเดตบล็อก" className="btn btn-ghost h-full w-full text-xl " />
         </div>
       </div>
         <div className="flex items-center justify-center w-full mt-5">

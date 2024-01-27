@@ -343,9 +343,9 @@ const gotoEditData = () => {
               </div>
             </div>
             <div className="mx-auto w-[859.10px] justify-center items-center gap-[75px] inline-flex">
-              <div className="basis-1/3 text-center w-[400px] h-[70px] rounded-md bg-[#587F61] my-2 px-2 py-4 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] justify-center items-center">
+              <div className="basis-1/3 text-center w-[400px] h-[70px] rounded-md bg-[#587F61] my-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] justify-center items-center">
                 <button
-                  className="text-white-500 text-3xl font-normal font-['Inter']"
+                  className="btn btn-ghost h-full w-full text-white-500 text-3xl font-normal font-['Inter']"
                   onClick={handleCalculate}
                 >
                   {" "}
@@ -375,9 +375,9 @@ const gotoEditData = () => {
                   </div>
                 </div>
               )}
-              <div className="basis-1/3 text-center w-[400px] h-[70px] p-2.5 bg-zinc-100 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+              <div className="basis-1/3 text-center w-[400px] h-[70px] bg-zinc-100 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
                 <button
-                  className="text-neutral-500 text-3xl font-normal font-['Inter']"
+                  className="btn btn-ghost h-full w-full  text-neutral-500 text-3xl font-normal font-['Inter']"
                   onClick={clearFunction}
                 >
                   รีเซ็ตค่า

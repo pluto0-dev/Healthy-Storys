@@ -112,7 +112,7 @@ const CreateBlog = () => {
       <form onSubmit={handleFormSubmit}>
         <div className="flex justify-end mr-[300px] mt-6">
           <div className="w-[133px] h-[60px] item-center justify-center rounded-md bg-[#587F61] text-white text-xl font-bold shadow-sm hover:bg-[#4a6b52] mt-20 flex">
-            <input type="submit" value="สร้างบล็อก" className="" />
+            <input type="submit" value="สร้างบล็อก" className="btn btn-ghost h-full w-full" />
           </div>
         </div>
 

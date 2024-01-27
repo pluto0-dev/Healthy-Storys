@@ -304,8 +304,8 @@ const Profile = () => {
             </div>
 
             <div className="flex items-center justify-center mt-2 w-3/4 max-w-ws">
-              <div className="flex w-2/4 justify-center rounded-md bg-[#587F61] ml-[130px] py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] ">
-                <input type="submit" value="บันทึก" className="max-w-ws" />
+              <div className="btn btn-ghost w-2/4 justify-center rounded-md bg-[#587F61] ml-[130px] py-3 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52] ">
+                <input type="submit" value="บันทึก" className="w-full h-full"/>
               </div>
             </div>
           </div>

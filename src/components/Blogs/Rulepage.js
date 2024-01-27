@@ -5,7 +5,8 @@ const Rulepage = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [checkboxClicked, setCheckboxClicked] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-const router = useRouter()
+  const router = useRouter();
+
   useEffect(() => {
     setIsButtonDisabled(!checkboxClicked);
   }, [checkboxClicked]);
@@ -18,7 +19,6 @@ const router = useRouter()
   const handleClickCheckbox = () => {
     setCheckboxClicked((prev) => !prev);
   };
-
   const ruledetail = [
         "1.ไม่อนุญาตอัปโหลดวีดีโอภาพเปลือยหรือเนื้อหาเกี่ยวกับเรื่องเพศ",
         "2.ไม่อนุญาตโพสต์เนื้อหาที่เป็นอันตรายหรือให้โทษ",
@@ -36,19 +36,19 @@ const router = useRouter()
         "<br /><span style='color: red;'>***ดังนั้นหากไม่อยากให้วีดีโอของคุณถูกลบ ช่องของคุณถูกแบน หรือถูกลบบัญชีถาวร ก็ให้อ่านกฎและปฏิบัติภายใต้เงื่อนไขการอยู่ร่วมกันด้วย***</span>",
       ];
 
-  const details = ruledetail.map((rule, index) => (
+      const details = ruledetail.map((rule, index) => (
         <li key={index} dangerouslySetInnerHTML={{ __html: rule }} />
       ));
-
-  const handleNextClick = () => {
-    router.push("/blogs/create")
-    //console.log("Next button clicked!");
     
-  };
-
+      const handleNextClick = () => {
+        if (checkboxClicked) {
+          router.push("/blogs/create");
+          // console.log("Next button clicked!");
+        }
+      };
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-8">
         <h1 className="mt-20 text-2xl font-bold text-black">
           กฎข้อห้ามของการลงวิดีโอ
         </h1>
@@ -69,8 +69,8 @@ const router = useRouter()
           ข้าพเจ้าได้อ่าน เเละเข้าใจรายละเอียดการขอความยินยอมข้างต้น
         </label>
       </div>
-      <div className={`flex w-20 justify-center rounded-md mx-auto my-2 px-2 py-3 text-md font-semibold shadow-sm ${checkboxClicked ? 'bg-[#587F61] text-white hover:bg-[#4a6b52]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
-        <button onClick={handleNextClick}>
+      <div className={`flex w-20 justify-center rounded-md mx-auto mt-2 text-md font-semibold shadow-sm ${checkboxClicked ? 'bg-[#587F61] text-white hover:bg-[#4a6b52]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}>
+        <button onClick={handleNextClick} className={`btn btn-ghost w-full h-full disabled:text-white`} disabled={isButtonDisabled}>
           Next
         </button>
       </div>

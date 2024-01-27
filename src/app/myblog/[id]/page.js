@@ -196,15 +196,15 @@ const myBlogs = ({ params }) => {
       <div className="flex  mt-5 item-center justify-end mr-[410px] ">
         <Link
           href={`/blogs/editblog/${blogs[0]?.id}`}
-          className="w-1/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
+          className="w-1/12 rounded-md bg-[#587F61] mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
         >
-          <input type="submit" value="แก้ไขบล็อก" className="ml-4" />
+          <input type="submit" value="แก้ไขบล็อก" className="btn btn-ghost h-full w-full" />
         </Link>
         <Link
           href={`/content/createcontent/${params.id}`}
-          className="w-2/12 rounded-md bg-[#587F61] py-3 mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
+          className="w-2/12 rounded-md bg-[#587F61] mx-2 text-md font-semibold text-white shadow-sm hover:bg-[#4a6b52]"
         >
-          <input type="submit" value="+ สร้างคอนเทนต์ของคุณ" className="ml-5" />
+          <input type="submit" value="+ สร้างคอนเทนต์ของคุณ" className="btn btn-ghost h-full w-full" />
         </Link>
       </div>
       <div className="flex items-end justify-end">
